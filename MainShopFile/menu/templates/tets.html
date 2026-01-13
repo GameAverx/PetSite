@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Интерактивная кнопка</title>
+</head>
+<body>
+  <div class="gallery">
+      <img src="static/images/1.jpg" class="card-img-top" alt="Пицца" width="200" height="200">
+
+  </div>
+  <button onclick="showMessage()">Нажми на меня!</button>
+      <p id="demo"></p>
+    <script>
+        function showMessage() {
+            // Находим элемент с id="demo" и меняем его текст
+            document.getElementById("demo").innerHTML = "Привет, мир! Кнопка была нажата!";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1 >123</h1>
+    <h1 >123</h1>
+    <h1 id="123id" >123</h1>
+    <h1 >123</h1>
+    <button id="btn1" onclick="ClickBtn(this)" name = "main">hard</button>
+    <input oninput="On(this)">
+    <noscript>ввключи javascript </noscript>
+    <script>
+        var x = 0;
+        x = getElementById(123id).style.display = 'none';
+        function ClickBtn(count) {
+            x++;
+            count.innerHTML = x;
+            console.log(count.name)
+            count.style.background = "red";
+            count.style.color = "#333";
+            count.style.cssText = "border-radius: 5px; border: 0; font-size: 20px";
+
+
+        }
+        function On(el) {
+            console.log(el.value)
+        }
+
+
+    </script>
+</body>
+</html>

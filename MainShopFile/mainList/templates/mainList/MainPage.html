@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BitFood - Доставка еды</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://source.unsplash.com/random/1200x600/?food') center/cover no-repeat;
+            color: white;
+            padding: 100px 0;
+        }
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #ff6b35;
+            border-color: #ff6b35;
+        }
+        .btn-primary:hover {
+            background-color: #e55a2b;
+            border-color: #e55a2b;
+        }
+        footer {
+            background-color: #2d3748;
+        }
+    </style>
+</head>
+<body>
+<!-- Навигация -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">BitFood</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/menu">Меню</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#about">О нас</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#contacts">Контакты</a>
+                </li>
+            </ul>
+            <div class="d-flex">
+                <a href="/login">
+                    <button class="btn btn-outline-light me-2">Войти</button>
+                    <button class="btn btn-primary">Регистрация</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Главный баннер -->
+<section class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-4">Вкусная еда с доставкой на дом</h1>
+        <p class="lead mb-4">Более 1000 блюд на выбор. Быстрая доставка в течение 30 минут</p>
+        <a href="/menu">
+            <button class="btn btn-primary btn-lg">Заказать сейчас</button>
+        </a>
+    </div>
+</section>
+
+<!-- Популярные блюда -->
+<section id="menu" class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Популярные блюда</h2>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100">
+                    <img src="https://source.unsplash.com/random/300x200/?pizza" class="card-img-top" alt="Пицца">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Пицца Маргарита</h5>
+                        <p class="card-text">Классическая итальянская пицца с томатным соусом и моцареллой</p>
+                        <div class="mt-auto">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 text-primary mb-0">450 ₽</span>
+                                <button class="btn btn-primary">В корзину</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100">
+                    <img src="https://source.unsplash.com/random/300x200/?sushi" class="card-img-top" alt="Суши">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Роллы Калифорния</h5>
+                        <p class="card-text">8 шт. с крабом, авокадо и икрой масаго</p>
+                        <div class="mt-auto">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 text-primary mb-0">320 ₽</span>
+                                <button class="btn btn-primary">В корзину</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100">
+                    <img src="https://source.unsplash.com/random/300x200/?burger" class="card-img-top" alt="Бургер">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Чизбургер</h5>
+                        <p class="card-text">Сочная говяжья котлета с сыром чеддер и овощами</p>
+                        <div class="mt-auto">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 text-primary mb-0">280 ₽</span>
+                                <button class="btn btn-primary">В корзину</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100">
+                    <img src="https://source.unsplash.com/random/300x200/?salad" class="card-img-top" alt="Салат">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Салат Цезарь</h5>
+                        <p class="card-text">С куриным филе, пармезаном и соусом цезарь</p>
+                        <div class="mt-auto">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 text-primary mb-0">350 ₽</span>
+                                <button class="btn btn-primary">В корзину</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- О нас -->
+<section id="about" class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="mb-4">О BitFood</h2>
+                <p class="lead">BitFood - это сервис доставки еды, который объединяет лучшие рестораны вашего
+                    города.</p>
+                <p>Мы работаем с 2018 года и за это время успели доставить более 1 000 000 заказов. Наша миссия -
+                    сделать заказ еды простым, быстрым и удобным.</p>
+                <p>С BitFood вы можете заказать любимые блюда из более чем 100 ресторанов с доставкой до двери.</p>
+            </div>
+            <div class="col-lg-6">
+                <img src="https://source.unsplash.com/random/600x400/?restaurant" class="img-fluid rounded"
+                     alt="Ресторан">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Преимущества -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Почему выбирают нас</h2>
+        <div class="row text-center">
+            <div class="col-md-3 mb-4">
+                <div class="h1 text-primary mb-3">🚚</div>
+                <h5>Быстрая доставка</h5>
+                <p>Доставляем заказы в течение 30 минут</p>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="h1 text-primary mb-3">🍕</div>
+                <h5>Широкий выбор</h5>
+                <p>Более 1000 блюд из разных кухонь мира</p>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="h1 text-primary mb-3">💳</div>
+                <h5>Удобная оплата</h5>
+                <p>Оплата онлайн или наличными при получении</p>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="h1 text-primary mb-3">⭐</div>
+                <h5>Гарантия качества</h5>
+                <p>Только проверенные рестораны-партнеры</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Контакты -->
+<footer id="contacts" class="text-white py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <h5 class="mb-3">BitFood</h5>
+                <p>Сервис доставки еды №1 в вашем городе</p>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <h5 class="mb-3">Контакты</h5>
+                <p>Телефон: +7 (999) 123-45-67</p>
+                <p>Email: info@bitfood.ru</p>
+                <p>Адрес: г. Москва, ул. Примерная, д. 10</p>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <h5 class="mb-3">Мы в соцсетях</h5>
+                <div class="d-flex gap-3">
+                    <a href="#" class="text-white">Facebook</a>
+                    <a href="#" class="text-white">Instagram</a>
+                    <a href="#" class="text-white">VK</a>
+                </div>
+            </div>
+        </div>
+        <hr class="my-4">
+        <div class="text-center">
+            <p>&copy; 2023 BitFood. Все права защищены.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+    function showMessage() {
+            // Находим элемент с id="demo" и меняем его текст
+            document.getElementById("demo").innerHTML = "Привет, мир! Кнопка была нажата!";
+        }
+
+</script>
+</body>
+</html>
