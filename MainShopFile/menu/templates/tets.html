@@ -5,6 +5,30 @@
 </head>
 <body>
   <div class="gallery">
+      {% with name= 'anna', age=25 %}
+            <p>Имя: {{ name }}</p>
+
+
+      {% for i in name %}
+        {{ i }}
+        <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="card h-100">
+                        <img src="static/images/pizza.jpg" class="card-img-top" alt="Пицца" width="300" height="200">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Пицца Маргарита</h5>
+                            <p class="card-text">Классическая итальянская пицца с томатным соусом и моцареллой</p>
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="h5 text-primary mb-0">450 ₽</span>
+                                    <button class="btn btn-primary">В корзину</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+      {% endfor %}
+            {% endwith %}
       <img src="static/images/1.jpg" class="card-img-top" alt="Пицца" width="200" height="200">
 
   </div>

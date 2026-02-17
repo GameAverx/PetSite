@@ -51,10 +51,31 @@
                         <a class="nav-link" href="#contacts">Контакты</a>
                     </li>
                 </ul>
-                <div class="d-flex">
+
+
+                {% if not user.is_authenticated %}
+            <div class="d-flex">
+                <a href="/authorization/login">
                     <button class="btn btn-outline-light me-2">Войти</button>
+                </a>
+                <a href="/authorization/sign_up">
                     <button class="btn btn-primary">Регистрация</button>
-                </div>
+                </a>
+            </div>
+            {% else %}
+            <div class="d-flex">
+                <a href="">
+                    <button class="btn btn-outline-light me-2">Корзина</button>
+                </a>
+                <a href="">
+                    <button class="btn btn-primary">Профиль</button>
+                </a>
+
+            </div>
+          {% endif %}
+
+
+
             </div>
         </div>
     </nav>
@@ -71,7 +92,11 @@
     <section id="menu" class="py-5">
         <div class="container">
             <h2 class="text-center mb-5">Меню</h2>
+
+            {% with name="abc" %}
+            {% for i in name %}
             <div class="row g-4">
+
                 <div class="col-md-6 col-lg-3">
                     <div class="card h-100">
                         <img src="static/images/pizza.jpg" class="card-img-top" alt="Пицца" width="300" height="200">
@@ -136,6 +161,9 @@
                     </div>
                 </div>
             </div>
+        {% endfor %}
+            {% endwith %}
+
         </div>
     </section>
 

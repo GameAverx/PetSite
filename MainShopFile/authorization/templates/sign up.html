@@ -198,12 +198,32 @@
             Неверный email или пароль
         </div>
 
-        <form id="loginForm">
+        {% if error %}
+
+        <div class="messages">
+            <p style="color: red;">{{error}}</p>
+
+        </div>
+    {% endif %}
+
+        <form method="POST" action="">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="name">Ваше имя</label>
+                <input
+                        type="text"
+                    id="name"
+                    name="name"
+                    class="form-control"
+                    required>
+
             <div class="form-group">
                 <label for="email">Email</label>
                 <input
                     type="email"
                     id="email"
+                    name="email"
                     class="form-control"
                     placeholder="your@email.com"
                     required
@@ -214,25 +234,18 @@
                 <label for="password">Пароль</label>
                 <div class="password-toggle">
                     <input
-                        type="password"
-                        id="password"
-                        class="form-control"
-                        placeholder="Введите пароль"
-                        required
-                    >
+                            type="password"
+                            name="password"
+                            id="password"
+                            class="form-control"
+                            required>
                     <button type="button" class="toggle-password" onclick="togglePassword()">
                         👁️
                     </button>
                 </div>
             </div>
-
-            <div class="remember-me">
-                <input type="checkbox" id="remember">
-                <label for="remember">Запомнить меня</label>
-            </div>
-
-            <button type="submit" class="btn btn-primary">
-                Войти
+            <button type="submit" class="btn btn-primary" >
+                Зарегистрироваться
             </button>
         </form>
 
@@ -250,7 +263,7 @@
 
         <div class="form-footer">
             <p>
-                Нет аккаунта? <a href="#" onclick="showRegister()">Зарегистрироваться</a>
+                есть аккаунт? <a href="#" onclick="showRegister()">Войти</a>
             </p>
             <p style="margin-top: 10px;">
                 <a href="#" onclick="forgotPassword()">Забыли пароль?</a>

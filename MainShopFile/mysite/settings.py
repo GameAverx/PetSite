@@ -124,3 +124,27 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# AUTH_USER_MODEL = 'authorization.Users'
+
+
+# Принудительно использовать сессии
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # по умолчанию
+
+# Имя куки для сессии
+SESSION_COOKIE_NAME = 'sessionid'  # по умолчанию
+
+# Возраст сессии (в секундах)
+SESSION_COOKIE_AGE = 1209600  # 2 недели
+
+# Сохранять сессию при каждом запросе
+SESSION_SAVE_EVERY_REQUEST = True  # Попробуйте True!
+
+# Сессия истекает при закрытии браузера?
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+# Безопасность (для разработки можно так)
+SESSION_COOKIE_SECURE = False  # True только для HTTPS
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
