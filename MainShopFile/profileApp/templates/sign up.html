@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BitFood - Вход</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #ff6b35;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .logo p {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #ff6b35;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #e55a2b;
+            transform: translateY(-2px);
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e1e1;
+        }
+
+        .form-footer a {
+            color: #ff6b35;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-error {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+        }
+
+        .password-toggle {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .remember-me input {
+            margin-right: 8px;
+        }
+
+        .social-login {
+            margin-top: 25px;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .social-btn:hover {
+            background: #f5f5f5;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+
+            .logo h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1>BitFood</h1>
+            <p>Войдите в свой аккаунт</p>
+        </div>
+
+        <div class="alert alert-error" id="errorAlert">
+            Неверный email или пароль
+        </div>
+
+        {% if error %}
+
+        <div class="messages">
+            <p style="color: red;">{{error}}</p>
+
+        </div>
+    {% endif %}
+
+        <form method="POST" action="">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="name">Ваше имя</label>
+                <input
+                        type="text"
+                    id="name"
+                    name="name"
+                    class="form-control"
+                    required>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="form-control"
+                    placeholder="your@email.com"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">Пароль</label>
+                <div class="password-toggle">
+                    <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            class="form-control"
+                            required>
+                    <button type="button" class="toggle-password" onclick="togglePassword()">
+                        👁️
+                    </button>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" >
+                Зарегистрироваться
+            </button>
+        </form>
+
+        <div class="social-login">
+            <p style="text-align: center; color: #666; margin-bottom: 15px;">Или войдите через</p>
+            <div class="social-buttons">
+                <button class="social-btn" onclick="socialLogin('google')">
+                    <span>G</span> Google
+                </button>
+                <button class="social-btn" onclick="socialLogin('vk')">
+                    <span>VK</span> ВКонтакте
+                </button>
+            </div>
+        </div>
+
+        <div class="form-footer">
+            <p>
+                есть аккаунт? <a href="#" onclick="showRegister()">Войти</a>
+            </p>
+            <p style="margin-top: 10px;">
+                <a href="#" onclick="forgotPassword()">Забыли пароль?</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Переключение видимости пароля
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleButton = document.querySelector('.toggle-password');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleButton.textContent = '🔒';
+            } else {
+                passwordInput.type = 'password';
+                toggleButton.textContent = '👁️';
+            }
+        }
+
+        // Обработка формы входа
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember').checked;
+
+            // Простая валидация
+            if (!email || !password) {
+                showError('Заполните все поля');
+                return;
+            }
+
+            if (!isValidEmail(email)) {
+                showError('Введите корректный email');
+                return;
+            }
+
+            // Имитация успешного входа
+            simulateLogin(email, password, remember);
+        });
+
+        // Валидация email
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Показать ошибку
+        function showError(message) {
+            const errorAlert = document.getElementById('errorAlert');
+            errorAlert.textContent = message;
+            errorAlert.style.display = 'block';
+
+            setTimeout(() => {
+                errorAlert.style.display = 'none';
+            }, 5000);
+        }
+
+        // Имитация входа (для демонстрации)
+        function simulateLogin(email, password, remember) {
+            const errorAlert = document.getElementById('errorAlert');
+
+            // Демо-логика: успешный вход для определенных данных
+            if (email === 'demo@bitfood.ru' && password === 'demo123') {
+                errorAlert.style.display = 'none';
+                alert('Успешный вход! Добро пожаловать в BitFood!');
+                // Здесь будет редирект на главную страницу
+            } else {
+                showError('Неверный email или пароль');
+            }
+        }
+
+        // Социальные сети (заглушки)
+        function socialLogin(provider) {
+            alert(`Вход через ${provider} будет реализован позже`);
+        }
+
+        // Другие функции (заглушки)
+        function showRegister() {
+            alert('Форма регистрации будет реализована позже');
+        }
+
+        function forgotPassword() {
+            alert('Восстановление пароля будет реализовано позже');
+        }
+
+        // Анимация появления
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.login-container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(20px)';
+
+            setTimeout(() => {
+                container.style.transition = 'all 0.5s ease';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

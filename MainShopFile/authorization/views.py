@@ -54,7 +54,6 @@ def sign_up(request):
         password = request.POST.get('password')
         try:
             user = Users()
-            user
             user.name = name
             user.email = email
             user.set_password(password)

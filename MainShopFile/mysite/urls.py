@@ -22,6 +22,8 @@ urlpatterns = [
     path('', include('mainList.urls')),
     path('menu', include('menu.urls')),
     path('authorization', include('authorization.urls')),
+    path('profile', include('profileApp.urls')),
+    path('basket', include('basket.urls')),
 
     # path('', views.index, name='homePage'),
 ]

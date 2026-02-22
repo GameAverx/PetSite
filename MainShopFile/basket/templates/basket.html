@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BitFood - Корзина</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #ff6b35;
+            border-color: #ff6b35;
+        }
+        .btn-primary:hover {
+            background-color: #e55a2b;
+            border-color: #e55a2b;
+        }
+        .btn-outline-primary {
+            color: #ff6b35;
+            border-color: #ff6b35;
+        }
+        .btn-outline-primary:hover {
+            background-color: #ff6b35;
+            border-color: #ff6b35;
+            color: white;
+        }
+        footer {
+            background-color: #2d3748;
+        }
+
+        /* Стили для корзины */
+        .cart-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 0 100px;
+            margin-bottom: -50px;
+        }
+
+        .cart-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-top: -70px;
+        }
+
+        .cart-item {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            transition: background-color 0.3s;
+        }
+
+        .cart-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .item-image-placeholder {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 1px solid #dee2e6;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quantity-btn:hover {
+            background: #ff6b35;
+            border-color: #ff6b35;
+            color: white;
+        }
+
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .quantity-input:focus {
+            outline: none;
+            border-color: #ff6b35;
+        }
+
+        .remove-item {
+            color: #dc3545;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .remove-item:hover {
+            color: #a71d2a;
+        }
+
+        .summary-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            position: sticky;
+            top: 100px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .summary-total {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+
+        .promo-input {
+            border: 1px solid #dee2e6;
+            border-radius: 8px 0 0 8px;
+            padding: 10px 15px;
+        }
+
+        .promo-input:focus {
+            outline: none;
+            border-color: #ff6b35;
+        }
+
+        .promo-btn {
+            border-radius: 0 8px 8px 0;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-cart-icon {
+            font-size: 80px;
+            color: #dee2e6;
+            margin-bottom: 20px;
+        }
+
+        .recommendation-card {
+            transition: transform 0.3s;
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .badge-promo {
+            background: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">BitFood</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/menu">Меню</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#about">О нас</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#contacts">Контакты</a>
+                    </li>
+                </ul>
+
+                <div class="d-flex">
+                    <a href="/cart" class="me-2">
+                        <button class="btn btn-primary position-relative">
+                            <i class="bi bi-cart"></i> Корзина
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                3
+                            </span>
+                        </button>
+                    </a>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person"></i> Профиль
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/profile"><i class="bi bi-person"></i> Мой профиль</a></li>
+                            <li><a class="dropdown-item" href="/profile/orders"><i class="bi bi-box"></i> Мои заказы</a></li>
+                            <li><a class="dropdown-item" href="/profile/addresses"><i class="bi bi-geo-alt"></i> Адреса доставки</a></li>
+                            <li><a class="dropdown-item" href="/profile/settings"><i class="bi bi-gear"></i> Настройки</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="/logout"><i class="bi bi-box-arrow-right"></i> Выйти</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Шапка корзины -->
+    <div class="cart-header">
+        <div class="container text-center">
+            <h1 class="display-5 fw-bold mb-3">Ваша корзина</h1>
+            <p class="lead mb-0">Проверьте заказ и оформите доставку</p>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="container pb-5">
+        <div class="cart-container">
+            <div class="row">
+                <!-- Список товаров -->
+                <div class="col-lg-8">
+                    <!-- Заголовок -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4>Товары в корзине (3)</h4>
+                        <button class="btn btn-link text-danger" onclick="clearCart()">
+                            <i class="bi bi-trash"></i> Очистить корзину
+                        </button>
+                    </div>
+
+                    <!-- Товар 1 -->
+                    <div class="cart-item">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <img src="static/images/pizza.jpg" class="item-image" alt="Пицца">
+                            </div>
+                            <div class="col-md-4">
+                                <h5 class="mb-1">Пицца Маргарита</h5>
+                                <p class="text-muted small mb-0">30 см, традиционное тесто</p>
+                                <p class="text-muted small mb-0">Артикул: PZ-001</p>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="quantity-control">
+                                    <span class="quantity-btn" onclick="changeQuantity(this, -1)">
+                                        <i class="bi bi-dash"></i>
+                                    </span>
+                                    <input type="text" class="quantity-input" value="2" readonly>
+                                    <span class="quantity-btn" onclick="changeQuantity(this, 1)">
+                                        <i class="bi bi-plus"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="text-center">
+                                    <span class="fw-bold">900 ₽</span>
+                                    <p class="text-muted small mb-0">450 ₽ × 2</p>
+                                </div>
+                            </div>
+                            <div class="col-md-1 text-end">
+                                <i class="bi bi-x-circle remove-item" onclick="removeItem(this)"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Товар 2 -->
+                    <div class="cart-item">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <img src="static/images/sushi.jpg" class="item-image" alt="Суши">
+                            </div>
+                            <div class="col-md-4">
+                                <h5 class="mb-1">Роллы Калифорния</h5>
+                                <p class="text-muted small mb-0">11 шт., с крабом и авокадо</p>
+                                <p class="text-muted small mb-0">Артикул: RL-002</p>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="quantity-control">
+                                    <span class="quantity-btn" onclick="changeQuantity(this, -1)">
+                                        <i class="bi bi-dash"></i>
+                                    </span>
+                                    <input type="text" class="quantity-input" value="1" readonly>
+                                    <span class="quantity-btn" onclick="changeQuantity(this, 1)">
+                                        <i class="bi bi-plus"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="text-center">
+                                    <span class="fw-bold">320 ₽</span>
+                                </div>
+                            </div>
+                            <div class="col-md-1 text-end">
+                                <i class="bi bi-x-circle remove-item" onclick="removeItem(this)"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Товар 3 -->
+                    <div class="cart-item">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <img src="static/images/CBurger.jpg" class="item-image" alt="Бургер">
+                            </div>
+                            <div class="col-md-4">
+                                <h5 class="mb-1">Чизбургер</h5>
+                                <p class="text-muted small mb-0">С говяжьей котлетой и сыром</p>
+                                <p class="text-muted small mb-0">Артикул: BG-003</p>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="quantity-control">
+                                    <span class="quantity-btn" onclick="changeQuantity(this, -1)">
+                                        <i class="bi bi-dash"></i>
+                                    </span>
+                                    <input type="text" class="quantity-input" value="3" readonly>
+                                    <span class="quantity-btn" onclick="changeQuantity(this, 1)">
+                                        <i class="bi bi-plus"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="text-center">
+                                    <span class="fw-bold">840 ₽</span>
+                                    <p class="text-muted small mb-0">280 ₽ × 3</p>
+                                </div>
+                            </div>
+                            <div class="col-md-1 text-end">
+                                <i class="bi bi-x-circle remove-item" onclick="removeItem(this)"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Промокод -->
+                    <div class="mt-4 p-3 bg-light rounded">
+                        <div class="row g-2 align-items-center">
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <input type="text" class="form-control promo-input" placeholder="Введите промокод">
+                                    <button class="btn btn-primary promo-btn">Применить</button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="badge-promo"><i class="bi bi-tag"></i> WELCOME10 - скидка 10%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Примечание к заказу -->
+                    <div class="mt-4">
+                        <label class="form-label fw-bold">Примечание к заказу</label>
+                        <textarea class="form-control" rows="2" placeholder="Напишите пожелания по доставке, например: код домофона, этаж и т.д."></textarea>
+                    </div>
+                </div>
+
+                <!-- Блок с итогом -->
+                <div class="col-lg-4">
+                    <div class="summary-card">
+                        <h5 class="mb-4">Ваш заказ</h5>
+
+                        <div class="summary-row">
+                            <span>Товары (3 шт.)</span>
+                            <span class="fw-bold">2,060 ₽</span>
+                        </div>
+
+                        <div class="summary-row">
+                            <span>Доставка</span>
+                            <span class="fw-bold">100 ₽</span>
+                        </div>
+
+                        <div class="summary-row">
+                            <span>Скидка по промокоду</span>
+                            <span class="text-success">-200 ₽</span>
+                        </div>
+
+                        <div class="summary-row">
+                            <span class="h5 mb-0">Итого:</span>
+                            <span class="summary-total">1,960 ₽</span>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Выбор способа доставки -->
+                        <h6 class="mb-3">Способ доставки</h6>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="delivery" id="delivery1" checked>
+                            <label class="form-check-label" for="delivery1">
+                                Доставка курьером (30-40 мин)
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="radio" name="delivery" id="delivery2">
+                            <label class="form-check-label" for="delivery2">
+                                Самовывоз (20-30 мин)
+                            </label>
+                        </div>
+
+                        <!-- Выбор времени -->
+                        <h6 class="mb-3">Время доставки</h6>
+                        <select class="form-select mb-3">
+                            <option>Как можно скорее</option>
+                            <option>К 18:00</option>
+                            <option>К 19:00</option>
+                            <option>К 20:00</option>
+                        </select>
+
+                        <!-- Выбор оплаты -->
+                        <h6 class="mb-3">Способ оплаты</h6>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="payment" id="payment1" checked>
+                            <label class="form-check-label" for="payment1">
+                                Картой онлайн
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="payment" id="payment2">
+                            <label class="form-check-label" for="payment2">
+                                Картой курьеру
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="radio" name="payment" id="payment3">
+                            <label class="form-check-label" for="payment3">
+                                Наличными курьеру
+                            </label>
+                        </div>
+
+                        <!-- Кнопка оформления -->
+                        <button class="btn btn-primary w-100 py-3 mt-3" onclick="checkout()">
+                            <i class="bi bi-check-circle"></i> Оформить заказ
+                        </button>
+
+                        <p class="text-muted small text-center mt-3 mb-0">
+                            Нажимая "Оформить заказ", вы соглашаетесь с условиями доставки
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Рекомендуемые товары -->
+        <div class="mt-5">
+            <h3 class="text-center mb-4">С этим заказывают</h3>
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="card recommendation-card h-100">
+                        <img src="static/images/Cezar.jpg" class="card-img-top" alt="Салат">
+                        <div class="card-body">
+                            <h6 class="card-title">Салат Цезарь</h6>
+                            <p class="card-text small">С куриным филе и пармезаном</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">350 ₽</span>
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="bi bi-plus"></i> Добавить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card recommendation-card h-100">
+                        <img src="static/images/pizza.jpg" class="card-img-top" alt="Пицца">
+                        <div class="card-body">
+                            <h6 class="card-title">Пицца Пепперони</h6>
+                            <p class="card-text small">С острой колбаской</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">490 ₽</span>
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="bi bi-plus"></i> Добавить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card recommendation-card h-100">
+                        <img src="static/images/sushi.jpg" class="card-img-top" alt="Роллы">
+                        <div class="card-body">
+                            <h6 class="card-title">Роллы Филадельфия</h6>
+                            <p class="card-text small">С лососем и сливочным сыром</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">420 ₽</span>
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="bi bi-plus"></i> Добавить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="card recommendation-card h-100">
+                        <img src="static/images/CBurger.jpg" class="card-img-top" alt="Бургер">
+                        <div class="card-body">
+                            <h6 class="card-title">Бургер Де Люкс</h6>
+                            <p class="card-text small">Двойная котлета и бекон</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">380 ₽</span>
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="bi bi-plus"></i> Добавить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Пустая корзина (скрыта по умолчанию) -->
+    <div class="container pb-5" id="emptyCart" style="display: none;">
+        <div class="cart-container">
+            <div class="empty-cart">
+                <div class="empty-cart-icon">
+                    <i class="bi bi-cart"></i>
+                </div>
+                <h3 class="mb-3">Ваша корзина пуста</h3>
+                <p class="text-muted mb-4">Добавьте товары из меню, чтобы сделать заказ</p>
+                <a href="/menu" class="btn btn-primary btn-lg">
+                    <i class="bi bi-arrow-left"></i> Перейти в меню
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно успешного оформления -->
+    <div class="modal fade" id="successModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Заказ оформлен!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 60px;"></i>
+                    <h4 class="mt-3">Спасибо за заказ!</h4>
+                    <p class="text-muted">Номер вашего заказа: #12345</p>
+                    <p>Мы начали готовить ваш заказ и скоро привезем его</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Отлично!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Футер -->
+    <footer class="text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">BitFood</h5>
+                    <p>Сервис доставки еды №1 в вашем городе</p>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">Контакты</h5>
+                    <p>Телефон: +7 (999) 123-45-67</p>
+                    <p>Email: info@bitfood.ru</p>
+                    <p>Адрес: г. Москва, ул. Примерная, д. 10</p>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">Мы в соцсетях</h5>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white">Facebook</a>
+                        <a href="#" class="text-white">Instagram</a>
+                        <a href="#" class="text-white">VK</a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p>&copy; 2024 BitFood. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Функция изменения количества
+        function changeQuantity(btn, delta) {
+            const input = btn.parentElement.querySelector('.quantity-input');
+            let value = parseInt(input.value);
+            value = Math.max(1, value + delta);
+            input.value = value;
+            updateTotal();
+        }
+
+        // Функция удаления товара
+        function removeItem(btn) {
+            const item = btn.closest('.cart-item');
+            item.style.transition = 'all 0.3s';
+            item.style.opacity = '0';
+            item.style.transform = 'translateX(20px)';
+
+            setTimeout(() => {
+                item.remove();
+                updateTotal();
+                checkEmptyCart();
+            }, 300);
+        }
+
+        // Функция очистки корзины
+        function clearCart() {
+            if (confirm('Очистить корзину?')) {
+                const items = document.querySelectorAll('.cart-item');
+                items.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.style.transition = 'all 0.3s';
+                        item.style.opacity = '0';
+                        item.style.transform = 'translateX(20px)';
+
+                        setTimeout(() => {
+                            item.remove();
+                            if (index === items.length - 1) {
+                                updateTotal();
+                                checkEmptyCart();
+                            }
+                        }, 300);
+                    }, index * 100);
+                });
+            }
+        }
+
+        // Функция проверки пустой корзины
+        function checkEmptyCart() {
+            const items = document.querySelectorAll('.cart-item');
+            const cartContainer = document.querySelector('.cart-container');
+            const emptyCart = document.getElementById('emptyCart');
+
+            if (items.length === 0) {
+                cartContainer.style.display = 'none';
+                emptyCart.style.display = 'block';
+            } else {
+                cartContainer.style.display = 'block';
+                emptyCart.style.display = 'none';
+            }
+        }
+
+        // Функция обновления итогов
+        function updateTotal() {
+            // Здесь должна быть логика пересчета суммы
+            console.log('Обновление суммы...');
+        }
+
+        // Функция оформления заказа
+        function checkout() {
+            const modal = new bootstrap.Modal(document.getElementById('successModal'));
+            modal.show();
+
+            // Очистить корзину через 2 секунды (для демонстрации)
+            setTimeout(() => {
+                clearCart();
+            }, 2000);
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

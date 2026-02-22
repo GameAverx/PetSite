@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BitFood - Профиль пользователя</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #ff6b35;
+            border-color: #ff6b35;
+        }
+        .btn-primary:hover {
+            background-color: #e55a2b;
+            border-color: #e55a2b;
+        }
+        .btn-outline-primary {
+            color: #ff6b35;
+            border-color: #ff6b35;
+        }
+        .btn-outline-primary:hover {
+            background-color: #ff6b35;
+            border-color: #ff6b35;
+            color: white;
+        }
+        footer {
+            background-color: #2d3748;
+        }
+
+        /* Стили для профиля */
+        .profile-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 0 100px;
+            margin-bottom: -50px;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-top: -70px;
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin-top: -100px;
+            background: white;
+            padding: 5px;
+        }
+
+        .avatar-placeholder {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: -100px;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .avatar-placeholder i {
+            font-size: 60px;
+            color: white;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            font-size: 40px;
+            color: #ff6b35;
+            margin-bottom: 10px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s;
+        }
+
+        .order-card:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-color: #ff6b35;
+        }
+
+        .order-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-delivered {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-processing {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: #ff6b35;
+        }
+
+        .nav-pills .nav-link {
+            color: #495057;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            color: #212529;
+        }
+
+        .edit-input {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 10px 15px;
+            width: 100%;
+            transition: border-color 0.3s;
+        }
+
+        .edit-input:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 3px rgba(255,107,53,0.1);
+        }
+
+        .address-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+        }
+
+        .address-card.default {
+            border-color: #ff6b35;
+            background: #fff4f0;
+        }
+
+        .default-badge {
+            background: #ff6b35;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">BitFood</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/menu">Меню</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#about">О нас</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#contacts">Контакты</a>
+                    </li>
+                </ul>
+
+                <div class="d-flex">
+                    <a href="/basket" class="me-2">
+                        <button class="btn btn-outline-light">
+                            <i class="bi bi-cart"></i> Корзина
+                        </button>
+                    </a>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person"></i> Профиль
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/profile"><i class="bi bi-person"></i> Мой профиль</a></li>
+                            <li><a class="dropdown-item" href="/profile/orders"><i class="bi bi-box"></i> Мои заказы</a></li>
+                            <li><a class="dropdown-item" href="/profile/addresses"><i class="bi bi-geo-alt"></i> Адреса доставки</a></li>
+                            <li><a class="dropdown-item" href="/profile/settings"><i class="bi bi-gear"></i> Настройки</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="/logout"><i class="bi bi-box-arrow-right"></i> Выйти</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Шапка профиля -->
+    <div class="profile-header">
+        <div class="container text-center">
+            <h1 class="display-5 fw-bold mb-3">Личный кабинет</h1>
+            <p class="lead mb-0">Управляйте своим профилем и заказами</p>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="container pb-5">
+        <!-- Карточка профиля -->
+        <div class="profile-card">
+            <div class="row">
+                <!-- Аватар и основная информация -->
+                <div class="col-lg-4 text-center text-lg-start">
+                    <div class="d-flex flex-column align-items-center align-items-lg-start">
+                        <!-- Аватар -->
+                        <div class="avatar-placeholder mb-3 mx-auto mx-lg-0">
+                            <i class="bi bi-person"></i>
+                        </div>
+
+                        <!-- Имя пользователя -->
+                        <h3 class="mb-1">{{user.name}}</h3>
+                        <p class="text-muted mb-3">{{user.email}}</p>
+
+                        <!-- Кнопки действий -->
+                        <div class="d-flex gap-2 mb-4">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                                <i class="bi bi-pencil"></i> Редактировать
+                            </button>
+                            <button class="btn btn-outline-primary">
+                                <i class="bi bi-camera"></i> Сменить фото
+                            </button>
+                        </div>
+
+                        <!-- Статистика в виде списка (для мобильных) -->
+                        <div class="d-lg-none w-100">
+                            <div class="row g-2">
+                                <div class="col-4">
+                                    <div class="stat-card p-3">
+                                        <i class="bi bi-box stat-icon" style="font-size: 24px;"></i>
+                                        <h5 class="mb-0">15</h5>
+                                        <small>Заказов</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-card p-3">
+                                        <i class="bi bi-star stat-icon" style="font-size: 24px;"></i>
+                                        <h5 class="mb-0">4.8</h5>
+                                        <small>Рейтинг</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat-card p-3">
+                                        <i class="bi bi-heart stat-icon" style="font-size: 24px;"></i>
+                                        <h5 class="mb-0">12</h5>
+                                        <small>Избранное</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Статистика (для десктопа) -->
+                <div class="col-lg-8 d-none d-lg-block">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <i class="bi bi-box stat-icon"></i>
+                                <h3 class="mb-2">15</h3>
+                                <p class="text-muted mb-0">Всего заказов</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <i class="bi bi-truck stat-icon"></i>
+                                <h3 class="mb-2">12</h3>
+                                <p class="text-muted mb-0">Доставлено</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <i class="bi bi-star stat-icon"></i>
+                                <h3 class="mb-2">4.8</h3>
+                                <p class="text-muted mb-0">Средний рейтинг</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Навигация по вкладкам -->
+            <ul class="nav nav-pills nav-fill mt-4" id="profileTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="profile-tab" data-bs-toggle="pill" data-bs-target="#profile" type="button">
+                        <i class="bi bi-person"></i> Профиль
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="orders-tab" data-bs-toggle="pill" data-bs-target="#orders" type="button">
+                        <i class="bi bi-box"></i> Заказы
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="addresses-tab" data-bs-toggle="pill" data-bs-target="#addresses" type="button">
+                        <i class="bi bi-geo-alt"></i> Адреса
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="favorites-tab" data-bs-toggle="pill" data-bs-target="#favorites" type="button">
+                        <i class="bi bi-heart"></i> Избранное
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="settings-tab" data-bs-toggle="pill" data-bs-target="#settings" type="button">
+                        <i class="bi bi-gear"></i> Настройки
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Содержимое вкладок -->
+            <div class="tab-content mt-4" id="profileTabsContent">
+                <!-- Вкладка Профиль -->
+                <div class="tab-pane fade show active" id="profile" role="tabpanel">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="mb-3">Личная информация</h5>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td class="info-label">Имя:</td>
+                                    <td class="info-value">Анна Петрова</td>
+                                </tr>
+                                <tr>
+                                    <td class="info-label">Email:</td>
+                                    <td class="info-value">anna@example.com</td>
+                                </tr>
+                                <tr>
+                                    <td class="info-label">Телефон:</td>
+                                    <td class="info-value">+7 (999) 123-45-67</td>
+                                </tr>
+                                <tr>
+                                    <td class="info-label">Дата рождения:</td>
+                                    <td class="info-value">15.05.1995</td>
+                                </tr>
+                                <tr>
+                                    <td class="info-label">На сайте с:</td>
+                                    <td class="info-value">{{user.created_at}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="mb-3">О себе</h5>
+                            <p class="text-muted">Люблю вкусную еду, особенно пиццу и суши. Часто заказываю через BitFood, всегда свежее и вкусное!</p>
+
+                            <h5 class="mb-3 mt-4">Предпочтения</h5>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge bg-light text-dark p-2">Пицца</span>
+                                <span class="badge bg-light text-dark p-2">Суши</span>
+                                <span class="badge bg-light text-dark p-2">Бургеры</span>
+                                <span class="badge bg-light text-dark p-2">Салаты</span>
+                                <span class="badge bg-light text-dark p-2">Десерты</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вкладка Заказы -->
+                <div class="tab-pane fade" id="orders" role="tabpanel">
+                    <h5 class="mb-3">История заказов</h5>
+
+                    <div class="order-card">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <span class="fw-bold">Заказ №12345</span>
+                                <p class="text-muted small mb-0">15.02.2024</p>
+                            </div>
+                            <div class="col-md-3">
+                                <span>2 товара</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="fw-bold">1,250 ₽</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="order-status status-delivered">Доставлено</span>
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <button class="btn btn-outline-primary btn-sm">Подробнее</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-card">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <span class="fw-bold">Заказ №12344</span>
+                                <p class="text-muted small mb-0">14.02.2024</p>
+                            </div>
+                            <div class="col-md-3">
+                                <span>3 товара</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="fw-bold">1,890 ₽</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="order-status status-delivered">Доставлено</span>
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <button class="btn btn-outline-primary btn-sm">Подробнее</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-card">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <span class="fw-bold">Заказ №12343</span>
+                                <p class="text-muted small mb-0">13.02.2024</p>
+                            </div>
+                            <div class="col-md-3">
+                                <span>1 товар</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="fw-bold">850 ₽</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="order-status status-processing">В обработке</span>
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <button class="btn btn-outline-primary btn-sm">Подробнее</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-card">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <span class="fw-bold">Заказ №12342</span>
+                                <p class="text-muted small mb-0">12.02.2024</p>
+                            </div>
+                            <div class="col-md-3">
+                                <span>2 товара</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="fw-bold">1,450 ₽</span>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="order-status status-cancelled">Отменен</span>
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <button class="btn btn-outline-primary btn-sm">Подробнее</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вкладка Адреса -->
+                <div class="tab-pane fade" id="addresses" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0">Мои адреса доставки</h5>
+                        <button class="btn btn-primary btn-sm">
+                            <i class="bi bi-plus"></i> Добавить адрес
+                        </button>
+                    </div>
+
+                    <div class="address-card default">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <span class="fw-bold">Дом</span>
+                                <span class="default-badge">По умолчанию</span>
+                            </div>
+                            <div>
+                                <button class="btn btn-link text-primary p-0 me-2">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-link text-danger p-0">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="mt-2 mb-1">ул. Пушкина, д. 10, кв. 25</p>
+                        <p class="text-muted small mb-0">Подъезд 2, домофон 25, этаж 5</p>
+                    </div>
+
+                    <div class="address-card">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <span class="fw-bold">Работа</span>
+                            </div>
+                            <div>
+                                <button class="btn btn-link text-primary p-0 me-2">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-link text-danger p-0">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="mt-2 mb-1">ул. Ленина, д. 50, офис 300</p>
+                        <p class="text-muted small mb-0">Бизнес-центр "Горизонт", вход с центрального входа</p>
+                    </div>
+                </div>
+
+                <!-- Вкладка Избранное -->
+                <div class="tab-pane fade" id="favorites" role="tabpanel">
+                    <h5 class="mb-3">Избранные блюда</h5>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="row g-0">
+                                    <div class="col-md-4">
+                                        <img src="static/images/pizza.jpg" class="img-fluid rounded-start" alt="Пицца" style="height: 100%; object-fit: cover;">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Пицца Маргарита</h6>
+                                            <p class="card-text small">450 ₽</p>
+                                            <button class="btn btn-primary btn-sm">
+                                                <i class="bi bi-cart"></i> В корзину
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="row g-0">
+                                    <div class="col-md-4">
+                                        <img src="static/images/sushi.jpg" class="img-fluid rounded-start" alt="Суши" style="height: 100%; object-fit: cover;">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Роллы Калифорния</h6>
+                                            <p class="card-text small">320 ₽</p>
+                                            <button class="btn btn-primary btn-sm">
+                                                <i class="bi bi-cart"></i> В корзину
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вкладка Настройки -->
+                <div class="tab-pane fade" id="settings" role="tabpanel">
+                    <h5 class="mb-3">Настройки профиля</h5>
+
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Язык интерфейса</label>
+                            <select class="form-select">
+                                <option>Русский</option>
+                                <option>English</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Валюта</label>
+                            <select class="form-select">
+                                <option>₽ (RUB)</option>
+                                <option>$ (USD)</option>
+                                <option>€ (EUR)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="emailNotifications" checked>
+                            <label class="form-check-label" for="emailNotifications">
+                                Получать уведомления на email
+                            </label>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="smsNotifications">
+                            <label class="form-check-label" for="smsNotifications">
+                                Получать уведомления по SMS
+                            </label>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="promoNotifications" checked>
+                            <label class="form-check-label" for="promoNotifications">
+                                Получать информацию об акциях и скидках
+                            </label>
+                        </div>
+
+                        <h6 class="mt-4 mb-3">Смена пароля</h6>
+
+                        <div class="mb-3">
+                            <label class="form-label">Текущий пароль</label>
+                            <input type="password" class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Новый пароль</label>
+                            <input type="password" class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Подтвердите новый пароль</label>
+                            <input type="password" class="form-control">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Сохранить настройки</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно редактирования профиля -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Редактирование профиля</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Имя</label>
+                            <input type="text" class="edit-input" value="Анна Петрова">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="edit-input" value="anna@example.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Телефон</label>
+                            <input type="tel" class="edit-input" value="+7 (999) 123-45-67">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Дата рождения</label>
+                            <input type="date" class="edit-input" value="1995-05-15">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">О себе</label>
+                            <textarea class="edit-input" rows="3">Люблю вкусную еду, особенно пиццу и суши.</textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Футер -->
+    <footer class="text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">BitFood</h5>
+                    <p>Сервис доставки еды №1 в вашем городе</p>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">Контакты</h5>
+                    <p>Телефон: +7 (999) 123-45-67</p>
+                    <p>Email: info@bitfood.ru</p>
+                    <p>Адрес: г. Москва, ул. Примерная, д. 10</p>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">Мы в соцсетях</h5>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white">Facebook</a>
+                        <a href="#" class="text-white">Instagram</a>
+                        <a href="#" class="text-white">VK</a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p>&copy; 2024 BitFood. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

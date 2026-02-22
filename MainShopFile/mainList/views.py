@@ -1,14 +1,13 @@
 from django.shortcuts import render
-
+from authorization.models import Users
 
 def index(request):
+    user_id = request.session.get('user_id')
+    if user_id:
+        user = Users.objects.get(id=user_id)
+        print(user_id)
+        return render(request, 'mainList/MainPage.html', {'user': user})
     return render(request, 'mainList/MainPage.html')
 
-
-
-# def index(request):
-#     return render(request, 'mainList/mainPage.html')
-
-# Create your views here.
 def about(request):
     return render(request, 'mainList/about.html')
