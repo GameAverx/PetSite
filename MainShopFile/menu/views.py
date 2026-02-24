@@ -1,13 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from authorization.models import Users
 from .models import Dishes
+from basket.models import Cart
 
 def index(request):
     user_id = request.session.get('user_id')
     if user_id:
         user = Users.objects.get(id=user_id)
         print(user_id)
-
+        carts = Cart.objects.values()
+        print(carts)
         # dish = Dishes()
         # dish.name = 'Пицца Маргарита'
         # dish.price = 450
@@ -33,6 +35,35 @@ def index(request):
         #     print(i.description)
         # print(dishes)
 
-        return render(request, 'menuPageTest.html', {'user': user, 'menu': menu})
+        return render(request, 'menuPage.html', {'user': user, 'menu': menu})
     return render(request, 'menuPage.html')
+
+def add_to_cart(request, product_id):
+    user_id = request.session.get('user_id')
+    if user_id:
+        user = Users.objects.get(id=user_id)
+        if user.is_authenticated:
+            if request.method == 'POST':
+                quantity = request.POST.get('quantity')
+                try:
+                    dish = Dishes.objects.get(id=product_id)
+                    if dish.is_available is True:
+                        position = Cart()
+                        position.user_id = Users(id=user_id)
+                        position.dishes_id = Dishes(id=product_id)
+                        position.quantity = quantity
+                        position.save()
+                        return redirect('/menu')
+                    else:
+                        print('ERROR-1')
+                        return redirect('/menu')
+                except:
+                    print('ERROR-2')
+                    return redirect('/menu')
+            else:
+                return redirect('/menu')
+        else:
+            return redirect('/menu')
+    else:
+        return redirect('/menu')
 

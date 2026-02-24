@@ -63,10 +63,13 @@
             </div>
             {% else %}
             <div class="d-flex">
-                <a href="">
+                <a href="/basket">
+                    <button class="btn btn-outline-light me-2">Корзина</button>
+                </a>
+                <a href="/profile">
                     <button class="btn btn-primary">Профиль</button>
                 </a>
-            </div>
+                </div>
           {% endif %}
 
         </div>
@@ -89,6 +92,7 @@
     <div class="container">
         <h2 class="text-center mb-5">Популярные блюда</h2>
         <div class="row g-4">
+
             {% for i in menu %}
             <div class="col-md-6 col-lg-3">
                 <div class="card h-100">
@@ -106,6 +110,7 @@
                 </div>
             </div>
             {% endfor %}
+
         </div>
     </div>
 </section>

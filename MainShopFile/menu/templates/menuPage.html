@@ -64,7 +64,7 @@
             </div>
             {% else %}
             <div class="d-flex">
-                <a href="">
+                <a href="/basket">
                     <button class="btn btn-outline-light me-2">Корзина</button>
                 </a>
                 <a href="/profile">
@@ -92,77 +92,30 @@
     <section id="menu" class="py-5">
         <div class="container">
             <h2 class="text-center mb-5">Меню</h2>
-
-            {% with name="abc" %}
-            {% for i in name %}
             <div class="row g-4">
-                <div class="col-md-6 col-lg-3">
-                    <div class="card h-100">
-                        <img src="static/images/pizza.jpg" class="card-img-top" alt="Пицца" width="300" height="200">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">Пицца Маргарита</h5>
-                            <p class="card-text">Классическая итальянская пицца с томатным соусом и моцареллой</p>
-                            <div class="mt-auto">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="h5 text-primary mb-0">450 ₽</span>
-                                    <button class="btn btn-primary">В корзину</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="card h-100">
-                        <img src="static/images/sushi.jpg" class="card-img-top" alt="Пицца" width="300" height="200">
-<!--                        <img src="https://source.unsplash.com/random/300x200/?sushi" class="card-img-top" alt="Суши">-->
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">Роллы Калифорния</h5>
-                            <p class="card-text">11 шт. с крабом, авокадо и икрой масаго</p>
-                            <div class="mt-auto">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="h5 text-primary mb-0">320 ₽</span>
-                                    <button class="btn btn-primary">В корзину</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="card h-100">
-                        <img src="static/images/CBurger.jpg" class="card-img-top" alt="Пицца" width="300" height="200">
-<!--                        <img src="https://source.unsplash.com/random/300x200/?burger" class="card-img-top" alt="Бургер">-->
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">Чизбургер</h5>
-                            <p class="card-text">Сочная говяжья котлета с сыром чеддер и овощами</p>
-                            <div class="mt-auto">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="h5 text-primary mb-0">280 ₽</span>
-                                    <button class="btn btn-primary">В корзину</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="card h-100">
-                        <img src="static/images/Cezar.jpg" class="card-img-top" alt="Пицца" width="300" height="200">
-<!--                        <img src="https://source.unsplash.com/random/300x200/?salad" class="card-img-top" alt="Салат">-->
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">Салат Цезарь</h5>
-                            <p class="card-text">С куриным филе, пармезаном и соусом цезарь</p>
-                            <div class="mt-auto">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="h5 text-primary mb-0">350 ₽</span>
-                                    <button class="btn btn-primary">В корзину</button>
-                                </div>
+
+                {% for i in menu %}
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100">
+                    <img src="static/{{i.image_path}}" class="card-img-top" alt="Пицца">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{i.name}}</h5>
+                        <p class="card-text">{{i.description}}</p>
+                        <div class="mt-auto">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h5 text-primary mb-0">{{i.price}} ₽</span>
+                                <form method="POST" action="{% url 'add_to_cart' i.id %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="quantity" value="1">
+                                <button class="btn btn-primary">В корзину</button>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        {% endfor %}
-            {% endwith %}
-
+            {% endfor %}
+            </div>
         </div>
     </section>
 

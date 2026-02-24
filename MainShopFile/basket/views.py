@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from authorization.models import Users
+
 # import requests
 
 
@@ -16,3 +17,6 @@ def index(request):
         return render(request, 'basket.html', {'user': user})
     # не забыть проверить
     return redirect('/')
+
+
+
