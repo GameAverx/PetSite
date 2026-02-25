@@ -7,9 +7,7 @@ def index(request):
     user_id = request.session.get('user_id')
     if user_id:
         user = Users.objects.get(id=user_id)
-        print(user_id)
-        carts = Cart.objects.values()
-        print(carts)
+
         # dish = Dishes()
         # dish.name = 'Пицца Маргарита'
         # dish.price = 450
@@ -47,18 +45,28 @@ def add_to_cart(request, product_id):
                 quantity = request.POST.get('quantity')
                 try:
                     dish = Dishes.objects.get(id=product_id)
-                    if dish.is_available is True:
+
+                    if Cart.objects.filter(user_id=user_id, dishes_id=product_id).exists():
+                        cart = Cart.objects.filter(user_id=user_id, dishes_id=product_id).first()
+                        cart.quantity +=1
+                        cart.total_sum = float(Dishes.objects.get(id=product_id).price) * (int(quantity) + 1)
+                        cart.save()
+                        return redirect('/menu')
+
+                    elif dish.is_available is True:
                         position = Cart()
                         position.user_id = Users(id=user_id)
                         position.dishes_id = Dishes(id=product_id)
                         position.quantity = quantity
+                        position.total_sum = float(Dishes.objects.get(id=product_id).price) * int(quantity)
                         position.save()
                         return redirect('/menu')
                     else:
                         print('ERROR-1')
                         return redirect('/menu')
-                except:
+                except Exception as error:
                     print('ERROR-2')
+                    print(error)
                     return redirect('/menu')
             else:
                 return redirect('/menu')

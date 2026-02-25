@@ -225,8 +225,8 @@
                     <a href="/cart" class="me-2">
                         <button class="btn btn-primary position-relative">
                             <i class="bi bi-cart"></i> Корзина
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                3
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count-profile">
+                                {{cart.count}}
                             </span>
                         </button>
                     </a>
@@ -260,116 +260,65 @@
     <div class="container pb-5">
         <div class="cart-container">
             <div class="row">
+
                 <!-- Список товаров -->
                 <div class="col-lg-8">
                     <!-- Заголовок -->
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h4>Товары в корзине (3)</h4>
+                        <h4 id="cart-count">Товары в корзине ({{cart.count}})</h4>
                         <button class="btn btn-link text-danger" onclick="clearCart()">
                             <i class="bi bi-trash"></i> Очистить корзину
                         </button>
                     </div>
 
+
+                    {% for i in cart %}
                     <!-- Товар 1 -->
-                    <div class="cart-item">
+                    <div class="cart-item" id="cart-item-{{i.id}}">
                         <div class="row align-items-center">
                             <div class="col-md-2">
-                                <img src="static/images/pizza.jpg" class="item-image" alt="Пицца">
+                                <img src="static/{{i.dishes_id.image_path}}" class="item-image" alt="Пицца">
                             </div>
                             <div class="col-md-4">
-                                <h5 class="mb-1">Пицца Маргарита</h5>
-                                <p class="text-muted small mb-0">30 см, традиционное тесто</p>
-                                <p class="text-muted small mb-0">Артикул: PZ-001</p>
+                                <h5 class="mb-1">{{i.dishes_id}}</h5>
+                                <p class="text-muted small mb-0">{{i.dishes_id.description}}</p>
+                                <p class="text-muted small mb-0">Артикул: </p>
                             </div>
                             <div class="col-md-3">
                                 <div class="quantity-control">
-                                    <span class="quantity-btn" onclick="changeQuantity(this, -1)">
-                                        <i class="bi bi-dash"></i>
-                                    </span>
-                                    <input type="text" class="quantity-input" value="2" readonly>
-                                    <span class="quantity-btn" onclick="changeQuantity(this, 1)">
-                                        <i class="bi bi-plus"></i>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="text-center">
-                                    <span class="fw-bold">900 ₽</span>
-                                    <p class="text-muted small mb-0">450 ₽ × 2</p>
-                                </div>
-                            </div>
-                            <div class="col-md-1 text-end">
-                                <i class="bi bi-x-circle remove-item" onclick="removeItem(this)"></i>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Товар 2 -->
-                    <div class="cart-item">
-                        <div class="row align-items-center">
-                            <div class="col-md-2">
-                                <img src="static/images/sushi.jpg" class="item-image" alt="Суши">
-                            </div>
-                            <div class="col-md-4">
-                                <h5 class="mb-1">Роллы Калифорния</h5>
-                                <p class="text-muted small mb-0">11 шт., с крабом и авокадо</p>
-                                <p class="text-muted small mb-0">Артикул: RL-002</p>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="quantity-control">
-                                    <span class="quantity-btn" onclick="changeQuantity(this, -1)">
+                                    <button class="quantity-btn" onclick="updateQuantity({{ i.id }}, 'decrease')">
                                         <i class="bi bi-dash"></i>
-                                    </span>
-                                    <input type="text" class="quantity-input" value="1" readonly>
-                                    <span class="quantity-btn" onclick="changeQuantity(this, 1)">
-                                        <i class="bi bi-plus"></i>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="text-center">
-                                    <span class="fw-bold">320 ₽</span>
-                                </div>
-                            </div>
-                            <div class="col-md-1 text-end">
-                                <i class="bi bi-x-circle remove-item" onclick="removeItem(this)"></i>
-                            </div>
-                        </div>
-                    </div>
+                                    </button>
+                                    <input type="text"
+                                       class="quantity-input"
+                                       id="quantity-{{ i.id }}"
+                                       value="{{ i.quantity }}"
+                                       readonly>
 
-                    <!-- Товар 3 -->
-                    <div class="cart-item">
-                        <div class="row align-items-center">
-                            <div class="col-md-2">
-                                <img src="static/images/CBurger.jpg" class="item-image" alt="Бургер">
-                            </div>
-                            <div class="col-md-4">
-                                <h5 class="mb-1">Чизбургер</h5>
-                                <p class="text-muted small mb-0">С говяжьей котлетой и сыром</p>
-                                <p class="text-muted small mb-0">Артикул: BG-003</p>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="quantity-control">
-                                    <span class="quantity-btn" onclick="changeQuantity(this, -1)">
-                                        <i class="bi bi-dash"></i>
-                                    </span>
-                                    <input type="text" class="quantity-input" value="3" readonly>
-                                    <span class="quantity-btn" onclick="changeQuantity(this, 1)">
+                                    <button class="quantity-btn" onclick="updateQuantity({{ i.id }}, 'increase')">
                                         <i class="bi bi-plus"></i>
-                                    </span>
+                                    </button>
+
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="text-center">
-                                    <span class="fw-bold">840 ₽</span>
-                                    <p class="text-muted small mb-0">280 ₽ × 3</p>
+                                    {% widthratio i.quantity 1 i.dishes_id.price as total_price %}
+
+                                    <span class="fw-bold" id="total-{{ i.id }}"> {{total_price|floatformat:2}} ₽</span>
+
+                                    <p class="text-muted small mb-0" id="count-{{ i.id }}">{{i.dishes_id.price}} ₽ × {{i.quantity}}</p>
+
                                 </div>
                             </div>
                             <div class="col-md-1 text-end">
-                                <i class="bi bi-x-circle remove-item" onclick="removeItem(this)"></i>
+                                <i class="bi bi-x-circle remove-item" onclick="removeItem({{i.id}}, this)"></i>
                             </div>
                         </div>
                     </div>
+                    {% endfor %}
+
 
                     <!-- Промокод -->
                     <div class="mt-4 p-3 bg-light rounded">
@@ -399,8 +348,8 @@
                         <h5 class="mb-4">Ваш заказ</h5>
 
                         <div class="summary-row">
-                            <span>Товары (3 шт.)</span>
-                            <span class="fw-bold">2,060 ₽</span>
+                            <span id="cart-count_left">Товары ({{cart.count}} шт.)</span>
+                            <span class="fw-bold" id="total_cart">{{total_summa}} ₽</span>
                         </div>
 
                         <div class="summary-row">
@@ -618,48 +567,190 @@
 
     <script>
         // Функция изменения количества
-        function changeQuantity(btn, delta) {
-            const input = btn.parentElement.querySelector('.quantity-input');
-            let value = parseInt(input.value);
-            value = Math.max(1, value + delta);
-            input.value = value;
-            updateTotal();
+        function updateQuantity(cartItemId, action) {
+            const quantityInput = document.getElementById(`quantity-${cartItemId}`);
+            const originalValue = quantityInput.value;
+            quantityInput.style.opacity = '0.5';
+
+            const url = `basket/update/${cartItemId}/`;
+
+            fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: action
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (data.deleted) {
+
+                document.getElementById(`cart-item-${cartItemId}`).remove();
+
+                const cartCountUp = document.getElementById(`cart-count-profile`);
+                let current = parseInt(cartCountUp.textContent);
+                if (current - 1 == 0) {
+                    window.location.href = '/menu';
+                }
+
+                }
+
+
+                // Обновляем количество
+                quantityInput.value = data.new_quantity;
+
+                // Обновляем общую сумму для этого товара
+                const totalElement = document.getElementById(`total-${cartItemId}`);
+                if (totalElement) {
+                    totalElement.textContent = data.item_total + ' ₽';
+                }
+
+                // Обновляем карточку вычисления суммы за товар
+                const totalCount = document.getElementById(`count-${cartItemId}`);
+                if (totalCount) {
+                    totalCount.textContent = `${data.item_price} ₽ × ${data.new_quantity}`;
+                }
+
+                 // Обновляем товаров в корзине
+                const cartCount = document.getElementById(`cart-count`);
+                if (cartCount) {
+                    cartCount.textContent = `Товары в корзине (${data.cart_count})`;
+                }
+
+                const cartCountLeft = document.getElementById(`cart-count_left`);
+                if (cartCountLeft) {
+                    cartCountLeft.textContent = `Товары (${data.cart_count} шт.)`;
+                }
+
+                const cartCountUp = document.getElementById(`cart-count-profile`);
+                if (cartCountUp) {
+                    cartCountUp.textContent = `${data.cart_count}`;
+                }
+
+
+
+                // Обновляем общую сумму корзины
+                const updateCartTotal = document.getElementById(`total_cart`);
+                if (updateCartTotal) {
+                    updateCartTotal.textContent = `${data.cart_total}`;
+                }
+
+
+
+
+<!--                // Обновляем общую сумму корзины-->
+<!--                updateCartTotal(data.cart_total);-->
+
+            } else {
+                // Показываем ошибку
+                alert(data.error || 'Произошла ошибка');
+                quantityInput.value = originalValue;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Ошибка соединения');
+            quantityInput.value = originalValue;
+        })
+        .finally(() => {
+            quantityInput.style.opacity = '1';
+        });
+    }
+
+        function updateCartTotal(total) {
+        const cartTotalElement = document.getElementById('cart-total');
+        if (cartTotalElement) {
+            cartTotalElement.textContent = total + ' ₽';
         }
+    }
 
         // Функция удаления товара
-        function removeItem(btn) {
-            const item = btn.closest('.cart-item');
-            item.style.transition = 'all 0.3s';
-            item.style.opacity = '0';
-            item.style.transform = 'translateX(20px)';
+        function removeItem(ItemId, btn) {
 
-            setTimeout(() => {
-                item.remove();
-                updateTotal();
-                checkEmptyCart();
-            }, 300);
-        }
+            const url = `basket/delete/${ItemId}/`;
+
+            fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // УДАЛЕНИЕ
+                document.getElementById(`cart-item-${ItemId}`).remove();
+
+
+
+                // КОЛ-ВО В КОРЗИНЕ
+                const cartCount = document.getElementById(`cart-count`);
+                if (cartCount) {
+                    cartCount.textContent = `Товары в корзине (${data.cart_count})`;
+                }
+
+                const cartCountLeft = document.getElementById(`cart-count_left`);
+                if (cartCountLeft) {
+                    cartCountLeft.textContent = `Товары (${data.cart_count} шт.)`;
+                }
+
+                const cartCountUp = document.getElementById(`cart-count-profile`);
+                if (cartCountUp) {
+                    cartCountUp.textContent = `${data.cart_count}`;
+                }
+
+                // Обновляем общую сумму корзины
+                const updateCartTotal = document.getElementById(`total_cart`);
+                if (updateCartTotal) {
+                    updateCartTotal.textContent = `${data.cart_total}`;
+                }
+
+
+            if (data.cart_empty) {
+                window.location.href = data.redirect_url; // в меню
+            }
+
+            }})
+            }
 
         // Функция очистки корзины
         function clearCart() {
             if (confirm('Очистить корзину?')) {
-                const items = document.querySelectorAll('.cart-item');
-                items.forEach((item, index) => {
-                    setTimeout(() => {
-                        item.style.transition = 'all 0.3s';
-                        item.style.opacity = '0';
-                        item.style.transform = 'translateX(20px)';
 
-                        setTimeout(() => {
-                            item.remove();
-                            if (index === items.length - 1) {
-                                updateTotal();
-                                checkEmptyCart();
-                            }
-                        }, 300);
-                    }, index * 100);
-                });
+                const url = `basket/delete_cart`;
+                fetch(url, {
+                method: 'POST',
+                headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
             }
+        })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                    const items = document.querySelectorAll('.cart-item');
+                    items.forEach((item, index) => {
+                        setTimeout(() => {
+                            item.style.transition = 'all 0.3s';
+                            item.style.opacity = '0';
+                            item.style.transform = 'translateX(20px)';
+
+                            setTimeout(() => {
+                                item.remove();
+                                if (index === items.length - 1) {
+                                    updateTotal();
+                                    checkEmptyCart();
+                                }
+                            }, 300);
+                        }, index * 100);
+                    });
+                    window.location.href = '/menu';
+                    }})
+
+                }
         }
 
         // Функция проверки пустой корзины
