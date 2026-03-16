@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from authorization.models import Users
 from menu.models import Dishes
 from .models import Cart
+from .models import PromoCode, PromoCodeUsage
 
 
 from django.http import JsonResponse
@@ -22,11 +23,12 @@ def index(request):
         cart = Cart.objects.filter(user_id=user_id).all()
         if cart.count() >=1:
             print(user_id)
-            total_summa = 0
-            for i in cart:
-                total_summa+= i.total_sum
-                print(total_summa)
-
+            #
+            # total_summa = 0
+            # for i in cart:
+            #     total_summa+= i.total_sum
+            #     print(total_summa)
+            total_summa = calculate_cart_total(user_id)
 
             return render(request, 'basket.html', {'cart': cart, 'total_summa' : total_summa })
         else:
@@ -172,5 +174,84 @@ def delete_cart(request):
             'message': f'Не авторизован',
             'cart_empty': False
         })
+
+@require_POST
+def promocode(request):
+    user_id = request.session.get('user_id')
+
+    if user_id:
+
+        # promo = PromoCode()
+        # promo.code = 'WELCOME10'
+        # promo.discount_value = 10
+        # promo.save()
+
+
+        # promouse = PromoCodeUsage()
+        # promouse.user = Users.objects.get(id=user_id)
+        # promouse.promo_code = PromoCode.objects.get(code=promo.code)
+        # promouse.save()
+
+
+        data = json.loads(request.body)
+        code = data.get('code', '').strip().upper() # код
+
+        amount = float(data.get('amount', 0)) # сумма корзины
+
+        try:
+
+            # Проверяем впервые ли используется промокод
+            promo = PromoCode.objects.get(code=code, is_active=True)
+
+
+
+            if promo:
+            # print(promocode_id)
+                promocode_useage = PromoCodeUsage.objects.filter(promo_code=promo.id, user=user_id)
+
+                if not promocode_useage:
+                    # Ищем прокомод в базе
+                    discount = float(promo.discount_value)
+                    user_cart_sum = float(calculate_cart_total(user_id))
+                    # пересчет корзины
+                    new_amount = user_cart_sum - ((user_cart_sum/100) * discount)
+                    print(new_amount)
+
+                    return JsonResponse({
+                        'success': True,
+                        'message': f'Промокод успешно использован',
+                        'new_amount': new_amount,
+                        'discount' : discount
+                    })
+
+                else:
+                    return JsonResponse({
+                    'success': False,
+                    'message': f'Промокод уже был использован',
+                    })
+            else:
+                return JsonResponse({
+                    'success': False,
+                    'message': f'Промокод не действителен',
+                })
+
+
+
+
+        except Exception as errors:
+            print('123', errors)
+            return JsonResponse({
+                'success': False,
+                'message': f'Ошибка прокода',
+            })
+
+
+    else:
+        return JsonResponse({
+            'success': False,
+            'message': f'Не авторизован'
+            })
+
+
 
 

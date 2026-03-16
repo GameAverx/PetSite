@@ -325,12 +325,13 @@
                         <div class="row g-2 align-items-center">
                             <div class="col-md-8">
                                 <div class="input-group">
-                                    <input type="text" class="form-control promo-input" placeholder="Введите промокод">
-                                    <button class="btn btn-primary promo-btn">Применить</button>
+                                    <input type="text" id="promoCodeText" class="form-control promo-input" placeholder="Введите промокод">
+                                    <button class="btn btn-primary promo-btn" onclick="PromoCode()">Применить</button>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <span class="badge-promo"><i class="bi bi-tag"></i> WELCOME10 - скидка 10%</span>
+
                             </div>
                         </div>
                     </div>
@@ -364,7 +365,7 @@
 
                         <div class="summary-row">
                             <span class="h5 mb-0">Итого:</span>
-                            <span class="summary-total">1,960 ₽</span>
+                            <span class="summary-total" id="cart_sum">1,960 ₽</span>
                         </div>
 
                         <hr class="my-4">
@@ -783,6 +784,42 @@
             setTimeout(() => {
                 clearCart();
             }, 2000);
+        }
+
+        // функция для проверки промокодов
+        function PromoCode() {
+        const promoCodeInput = document.getElementById(`promoCodeText`);
+        const promoCodeText = promoCodeInput.value;
+        console.log(promoCodeText);
+        // передать еще и сумму корзины
+
+        total_sum = document.getElementById(`total_cart`);
+        total_sum = total_sum.value;
+        const url = `basket/promocode`;
+                fetch(url, {
+                method: 'POST',
+                headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+                body: JSON.stringify({
+                code: promoCodeText,
+                amount: total_sum
+        })
+        })
+         .then(response => response.json())
+         .then(data => {
+         alert(data.message);
+
+        if (data.success) {
+             const cartCount = document.getElementById(`cart_sum`);
+             cartCount.textContent = `${data.new_amount} ₽`;
+        } })
+
+
+
+
+
+
         }
     </script>
 
