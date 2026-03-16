@@ -44,6 +44,7 @@ def update_cart_quantity(request, cart_item_id):
         data = json.loads(request.body)
         action = data.get('action')
 
+
         # Получаем элемент корзины
         cart_item = Cart.objects.get(id=cart_item_id)
 
@@ -109,14 +110,25 @@ def update_cart_quantity(request, cart_item_id):
         }, status=500)
 
 # сумма корзины
+
 def calculate_cart_total(user_id):
     cart_items = Cart.objects.filter(user_id=user_id)
     total = 0
+    discount = False
     for item in cart_items:
         total += item.quantity * item.dishes_id.price
+        discount = item.applied_promo
         item.total_sum = total
         item.save()
-    return total
+    # тут какая-то проблема
+
+    if discount is not None:
+        discount = float(discount)
+        total = total - ((total/100) * discount)
+        return total
+    else:
+        return total
+
 
 @require_POST
 def delete_cart_item(request, cart_id):
@@ -186,17 +198,22 @@ def promocode(request):
         # promo.discount_value = 10
         # promo.save()
 
-
         # promouse = PromoCodeUsage()
         # promouse.user = Users.objects.get(id=user_id)
         # promouse.promo_code = PromoCode.objects.get(code=promo.code)
         # promouse.save()
 
+        if not request.body:
+            cart_items = Cart.objects.filter(user_id=user_id)
+
+            for item in cart_items:
+                item.applied_promo = None
+                item.save()
+            return JsonResponse({'success': True})
 
         data = json.loads(request.body)
         code = data.get('code', '').strip().upper() # код
 
-        amount = float(data.get('amount', 0)) # сумма корзины
 
         try:
 
@@ -207,21 +224,31 @@ def promocode(request):
 
             if promo:
             # print(promocode_id)
-                promocode_useage = PromoCodeUsage.objects.filter(promo_code=promo.id, user=user_id)
+                promocode_usage = PromoCodeUsage.objects.filter(promo_code=promo.id, user=user_id)
+                if not promocode_usage:
 
-                if not promocode_useage:
+
+                    cart_items = Cart.objects.filter(user_id=user_id)
+
+                    for item in cart_items:
+                        item.applied_promo = promo
+                        item.save()
+
+
+
                     # Ищем прокомод в базе
                     discount = float(promo.discount_value)
                     user_cart_sum = float(calculate_cart_total(user_id))
                     # пересчет корзины
-                    new_amount = user_cart_sum - ((user_cart_sum/100) * discount)
-                    print(new_amount)
+                    discount_sum = (user_cart_sum / 100) * discount
+                    new_amount = user_cart_sum - discount_sum
 
                     return JsonResponse({
                         'success': True,
                         'message': f'Промокод успешно использован',
                         'new_amount': new_amount,
-                        'discount' : discount
+                        'discount' : discount,
+                        'discount_sum' : discount_sum * -1
                     })
 
                 else:
@@ -251,6 +278,33 @@ def promocode(request):
             'success': False,
             'message': f'Не авторизован'
             })
+
+@require_POST
+def total_price(request):
+    try:
+        user_id = request.session.get('user_id')
+        data = json.loads(request.body)
+        delivery = data.get('delivery')
+        price = calculate_cart_total(user_id)
+        if delivery:
+            price = price + 100
+            return JsonResponse({
+                'success': True,
+                'message': f'',
+                'price' : price
+            })
+        else:
+            return JsonResponse({
+                'success': True,
+                'message': f'',
+                'price': price
+            })
+    except Exception as error:
+        print(123, error)
+        return JsonResponse({
+            'success': False,
+            'message': f'{error}',
+        })
 
 
 

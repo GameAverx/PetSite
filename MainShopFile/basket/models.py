@@ -6,13 +6,23 @@ class Cart(models.Model):
     user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
     dishes_id = models.ForeignKey(Dishes, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
-    total_sum= models.DecimalField(default=0, max_digits=15, decimal_places=2, verbose_name="Общая цена")
+    total_sum= models.DecimalField(default=0, max_digits=15, decimal_places=2, verbose_name="Цена товара")
+    applied_promo = models.ForeignKey(
+        'PromoCode',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def total_price(self):
         dish = Dishes.objects.get(id=self.dishes_id)
         price = dish.price
         return float(price* self.quantity)
+
+
+
     # def __str__(self):
     #     return self.name
 
@@ -21,6 +31,23 @@ class Cart(models.Model):
     # avatar = models.ImageField(upload_to='static/', blank=True, null=True)
     # is_available = models.BooleanField(default=True)
     # image = models.ImageField(upload_to='dishes/', blank=True, null=True)
+
+
+# class Full_Cart(models.Model):
+#     user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
+#     total_sum = models.DecimalField(default=0, max_digits=15, decimal_places=2, verbose_name="Общая цена товаров")
+#     applied_promo = models.ForeignKey(
+#         'PromoCode',
+#         null=True,
+#         blank=True,
+#         on_delete=models.SET_NULL
+#     )
+#
+#     discount_sum = models.DecimalField(default=0, max_digits=15, decimal_places=2, verbose_name="Общая цена товаров со скидкой")
+#     pay_amount = models.DecimalField(default=0, max_digits=15, decimal_places=2, verbose_name="Сумма к оплате")
+#     created_at = models.DateTimeField(auto_now_add=True)
+
+
 
 
 class PromoCode(models.Model):
