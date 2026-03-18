@@ -326,8 +326,9 @@
                             <div class="col-md-8">
                                 <div class="input-group">
                                     <input type="text" id="promoCodeText" class="form-control promo-input" placeholder="Введите промокод">
-                                    <button class="btn btn-primary promo-btn" id="promo-btn" onclick="data_cart(promo)">Применить</button>
+                                    <button class="btn btn-primary promo-btn" id="promo-btn" onclick="data_cart('promo')">Применить</button>
                                 </div>
+
                             </div>
                             <div class="col-md-4">
                                 <span class="badge-promo"><i class="bi bi-tag"></i> WELCOME10 - скидка 10%</span>
@@ -365,7 +366,7 @@
 
                         <div class="summary-row">
                             <span class="h5 mb-0">Итого:</span>
-                            <span class="summary-total" id="cart_sum">1,960 ₽</span>
+                            <span class="summary-total" id="cart_sum">{{total_summa}} ₽</span>
                         </div>
 
                         <hr class="my-4">
@@ -373,13 +374,13 @@
                         <!-- Выбор способа доставки -->
                         <h6 class="mb-3">Способ доставки</h6>
                         <div class="form-check mb-2">
-                            <input class="form-check-input" type="radio" name="delivery" id="delivery1" onchange="data_cart(delivery)">
+                            <input class="form-check-input" type="radio" name="delivery" id="delivery1" onchange="data_cart('delivery')">
                             <label class="form-check-label" for="delivery1">
                                 Доставка курьером (30-40 мин)
                             </label>
                         </div>
                         <div class="form-check mb-3">
-                            <input class="form-check-input" type="radio" name="delivery" id="delivery2" onchange="data_cart(delivery)" checked>
+                            <input class="form-check-input" type="radio" name="delivery" id="delivery2" onchange="data_cart('delivery')" checked>
                             <label class="form-check-label" for="delivery2">
                                 Самовывоз (20-30 мин)
                             </label>
@@ -782,130 +783,19 @@
             }, 2000);
         }
 
-
-        // функция применения промокода
-        function Promo(action = 0) {
-
-            const promo_btn = document.getElementById(`promo-btn`);
-
-            if (promo_btn.textContent == 'Изменить' & action == 0) {
-                const url = `basket/promocode`;
-                fetch(url, {
-                method: 'POST',
-                headers: {
-                'X-CSRFToken': '{{ csrf_token }}',
-                }
-                })
-
-                .then(response => response.json())
-                .then(data => {
-
-                if (data.success) {
-                    const input = document.getElementById(`promoCodeText`);
-                    input.disabled = false;
-                    promo_btn.textContent = `Применить`;
-
-                    const cartCount = document.getElementById(`cart_sum`);
-                    cartCount.textContent = `${data.new_price} ₽`;
-
-                    const block = document.getElementById('promocode-block');
-
-                     if (block.style.display === 'flex') {
-                        block.style.display = 'none'; }
-
-                }
-                })
-
-
-                }
-
-            else {
-                const promoCodeInput = document.getElementById(`promoCodeText`);
-                const promoCodeText = promoCodeInput.value;
-
-
-                const url = `basket/promocode`;
-                fetch(url, {
-                method: 'POST',
-                headers: {
-                'X-CSRFToken': '{{ csrf_token }}',
-            },
-                body: JSON.stringify({
-                code: promoCodeText
-
-                })
-                })
-                .then(response => response.json())
-                .then(data => {
-
-                if (data.success) {
-                     const cartCount = document.getElementById(`cart_sum`);
-                     cartCount.textContent = `${data.new_amount} ₽`;
-
-                     const total_discount = document.getElementById(`total_discount`);
-                     total_discount.textContent = `${data.discount_sum} ₽`;
-
-                     const input = document.getElementById(`promoCodeText`);
-                     input.disabled = true;
-
-                     const promo_btn = document.getElementById(`promo-btn`);
-                     promo_btn.textContent = `Изменить`;
-
-
-                     // показываем блок со скидкой
-                     const block = document.getElementById('promocode-block');
-
-                     if (block.style.display === 'none') {
-                        block.style.display = 'flex'; }
-                }
-
-                })
-                }
-        }
-
-
-        function total_cart_price(action = 0) {
-
-         const delivery = document.getElementById('delivery1');
-         const delivery_block = document.getElementById('delivery-block');
-
-         if (delivery.checked & delivery_block.style.display === 'none') {
-            delivery_block.style.display = 'flex';
-         } else if (action == 0) {
-                        delivery_block.style.display = 'none';
-                        }
-            // delivery.checked если true, то доставка курьером
-         const url = `basket/total_price`;
-                fetch(url, {
-                method: 'POST',
-                headers: {
-                'X-CSRFToken': '{{ csrf_token }}',
-            },
-                body: JSON.stringify({
-                delivery: delivery.checked
-                })
-                })
-                .then(response => response.json())
-                .then(data => {
-                 const sum = document.getElementById('cart_sum');
-                 sum.textContent = `${data.price} ₽`;
-
-                })
-
-
-        }
-
         // функция подсчёта итогов(суммы заказа со всеми выбранными опциями)
         // action для скидки и доставки
         function data_cart(action) {
 
             // промокод
             const promo_btn = document.getElementById(`promo-btn`);
+            const promoCodeInput = document.getElementById(`promoCodeText`);
             promocode = '';
-
-            if (promo_btn.textContent == `Изменить`) {
-                 const promoCodeInput = document.getElementById(`promoCodeText`);
-                 promocode = promoCodeInput.value;
+            if (promo_btn.textContent == `Изменить` & action != 'promo') {
+                promocode = promoCodeInput.value;
+            }
+            else if (promo_btn.textContent == `Применить` & action == 'promo'){
+                promocode = promoCodeInput.value;
             }
 
             // доставка
@@ -934,6 +824,8 @@
 
                 if (action == 'promo') {
                     promo_text = promo_btn.textContent;
+
+                    const discount_block = document.getElementById('discount-block');
                     if (promo_text == `Применить`) {
                         promoCodeInput.disabled = true;
                         promo_btn.textContent = `Изменить`;
@@ -967,8 +859,6 @@
                 const sum = document.getElementById('cart_sum');
                 sum.textContent = `${data.price} ₽`;
 
-
-
             }
             else {
                 // Показываем ошибку
@@ -977,7 +867,6 @@
             })
 
         }
-
 
     </script>
 
