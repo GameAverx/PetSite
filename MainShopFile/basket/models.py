@@ -33,7 +33,7 @@ class Cart(models.Model):
     # image = models.ImageField(upload_to='dishes/', blank=True, null=True)
 
 
-# class Full_Cart(models.Model):
+# class Data_Cart(models.Model):
 #     user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
 #     total_sum = models.DecimalField(default=0, max_digits=15, decimal_places=2, verbose_name="Общая цена товаров")
 #     applied_promo = models.ForeignKey(

@@ -114,20 +114,28 @@ def update_cart_quantity(request, cart_item_id):
 def calculate_cart_total(user_id):
     cart_items = Cart.objects.filter(user_id=user_id)
     total = 0
-    discount = False
     for item in cart_items:
         total += item.quantity * item.dishes_id.price
-        discount = item.applied_promo
         item.total_sum = total
         item.save()
     # тут какая-то проблема
 
+    return total
+
+def calculate_discount(user_id):
+    cart_item = Cart.objects.filter(user_id=user_id).first()
+    discount = cart_item.applied_promo
     if discount is not None:
-        discount = float(discount)
-        total = total - ((total/100) * discount)
-        return total
+        discount = float(discount.discount_value)
+        total = float(calculate_cart_total(user_id))
+        new_total = (total - (total / 100) * discount)
+        return new_total
     else:
-        return total
+        return calculate_cart_total(user_id)
+
+
+
+
 
 
 @require_POST
@@ -209,7 +217,7 @@ def promocode(request):
             for item in cart_items:
                 item.applied_promo = None
                 item.save()
-            return JsonResponse({'success': True})
+            return JsonResponse({'success': True, 'new_price': calculate_cart_total(user_id)})
 
         data = json.loads(request.body)
         code = data.get('code', '').strip().upper() # код
@@ -285,7 +293,7 @@ def total_price(request):
         user_id = request.session.get('user_id')
         data = json.loads(request.body)
         delivery = data.get('delivery')
-        price = calculate_cart_total(user_id)
+        price = calculate_discount(user_id)
         if delivery:
             price = price + 100
             return JsonResponse({
@@ -306,6 +314,10 @@ def total_price(request):
             'message': f'{error}',
         })
 
+
+@require_POST
+def data_cart(request):
+    pass
 
 
 
