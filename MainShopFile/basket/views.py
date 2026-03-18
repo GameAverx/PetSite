@@ -122,21 +122,6 @@ def calculate_cart_total(user_id):
 
     return total
 
-def calculate_discount(user_id):
-    cart_item = Cart.objects.filter(user_id=user_id).first()
-    discount = cart_item.applied_promo
-    if discount is not None:
-        discount = float(discount.discount_value)
-        total = float(calculate_cart_total(user_id))
-        new_total = (total - (total / 100) * discount)
-        return new_total
-    else:
-        return calculate_cart_total(user_id)
-
-
-
-
-
 
 @require_POST
 def delete_cart_item(request, cart_id):
@@ -317,7 +302,66 @@ def total_price(request):
 
 @require_POST
 def data_cart(request):
-    pass
+    user_id = request.session.get('user_id')
 
+    if user_id:
+        try:
+            data = json.loads(request.body)
+            code = data.get('code', '').strip().upper()  # код
+            delivery = data.get('delivery')
 
+            # обработка и проверка промокода
+            new_price = calculate_cart_total(user_id)
+            discount_sum = 0
+            if code != '':
+                promo = PromoCode.objects.get(code=code, is_active=True)
+                if promo:
+                    new_price, discount_sum = calculate_discount(user_id ,float(promo.discount_value))
+
+                else:
+                    return JsonResponse({
+                        'success': False,
+                        'message': f'Промокод не существует'
+                    })
+            # обработка доставки
+            if delivery:
+                new_price+=100
+
+            return JsonResponse({
+                'success': True,
+                'discount_sum': discount_sum,
+                'price': new_price
+            })
+
+        except Exception as Error:
+            print(Error)
+            return JsonResponse({
+                'success': False,
+                'message': f'{Error}'
+            })
+
+    else:
+        return JsonResponse({
+            'success': False,
+            'message': f'Не авторизован'
+            })
+
+# старый подсчет скидки
+# def calculate_discount(user_id):
+#     cart_item = Cart.objects.filter(user_id=user_id).first()
+#     discount = cart_item.applied_promo
+#     if discount is not None:
+#         discount = float(discount.discount_value)
+#         total = float(calculate_cart_total(user_id))
+#         discount_sum = (total / 100) * discount
+#         new_total = (total - discount_sum)
+#         return new_total, discount_sum
+#     else:
+#         return calculate_cart_total(user_id)
+
+def calculate_discount(user_id, discound_value):
+    total = float(calculate_cart_total(user_id))
+    discount_sum = (total / 100) * discound_value
+    new_total = (total - discount_sum)
+    return new_total, discount_sum
 
