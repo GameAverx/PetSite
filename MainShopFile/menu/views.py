@@ -5,6 +5,7 @@ from basket.models import Cart
 
 def index(request):
     user_id = request.session.get('user_id')
+    menu = Dishes.objects.all()
     if user_id:
         user = Users.objects.get(id=user_id)
 
@@ -26,7 +27,6 @@ def index(request):
 
         # Dishes.objects.all().delete()
         # Dishes.save()
-        menu = Dishes.objects.all()
         # for i in menu:
         #     print(i.name)
         #     print(i.price)
@@ -34,7 +34,7 @@ def index(request):
         # print(dishes)
 
         return render(request, 'menuPage.html', {'user': user, 'menu': menu})
-    return render(request, 'menuPage.html')
+    return render(request, 'menuPage.html', {'menu': menu})
 
 def add_to_cart(request, product_id):
     user_id = request.session.get('user_id')

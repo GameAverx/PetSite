@@ -198,6 +198,53 @@
             border-radius: 20px;
             font-size: 12px;
         }
+<!--        новые стили для способов доставки -->
+
+        .form-check-input:checked {
+            background-color: #ff6b35;
+            border-color: #ff6b35;
+        }
+
+        .form-check-input:focus {
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25);
+        }
+
+        .form-select {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 8px 12px;
+        }
+
+        .form-select:focus {
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25);
+        }
+
+        .btn-outline-primary {
+            color: #ff6b35;
+            border-color: #ff6b35;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #ff6b35;
+            border-color: #ff6b35;
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: #ff6b35;
+            border-color: #ff6b35;
+        }
+
+        .btn-primary:hover {
+            background-color: #e55a2b;
+            border-color: #e55a2b;
+        }
+
+
+
+
     </style>
 </head>
 <body>
@@ -240,7 +287,7 @@
                             <li><a class="dropdown-item" href="/profile/addresses"><i class="bi bi-geo-alt"></i> Адреса доставки</a></li>
                             <li><a class="dropdown-item" href="/profile/settings"><i class="bi bi-gear"></i> Настройки</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="/logout"><i class="bi bi-box-arrow-right"></i> Выйти</a></li>
+                            <li><a class="dropdown-item text-danger" href="authorization/logout"><i class="bi bi-box-arrow-right"></i> Выйти</a></li>
                         </ul>
                     </div>
                 </div>
@@ -376,14 +423,85 @@
                         <div class="form-check mb-2">
                             <input class="form-check-input" type="radio" name="delivery" id="delivery1" onchange="data_cart('delivery')">
                             <label class="form-check-label" for="delivery1">
-                                Доставка курьером (30-40 мин)
+                               🚚 Доставка курьером (30-40 мин)
                             </label>
                         </div>
+                        <!--Выбор адресов для доставки курьером-->
+
+                        <div id="courierBlock" style="display: none;">
+                            <h5 class="mb-3">📍 Адрес доставки</h5>
+
+                            <select class="form-select mb-2" id="addressSelect">
+                                {% if adresses != 0 %}
+                                {% for i in adresses %}
+<!--                                <option value="home">🏠 ул. Ленина, 10 - кв. 25</option>-->
+<!--                                <option value="work">💼 ул. Пушкина, 5 - офис 304</option>&ndash;&gt;-->
+<!--                                <option value="other">🏢 ТЦ "Глобус", 2 этаж</option>-->
+
+                                {% if i.address_type == 'home' %}
+                                    {% if i.apartment != '' %}
+                                        <option value="home">🏠 г. {{i.city}}, ул. {{i.street}}, {{i.house}} - кв. {{i.apartment}}</option>
+                                    {% else %}
+                                        <option value="home">🏠 г. {{i.city}}, ул. {{i.street}}, {{i.house}}</option>
+                                    {% endif %}
+
+                                {% elif i.address_type == 'work'%}
+                                    {% if i.apartment != '' %}
+                                        <option value="work">💼 г. {{i.city}}, ул. {{i.street}}, {{i.house}} - кв. {{i.apartment}}</option>
+                                    {% else %}
+                                        <option value="work">💼 г. {{i.city}}, ул. {{i.street}}, {{i.house}}</option>
+                                    {% endif %}
+
+                                {% else %}
+                                     {% if i.apartment != '' %}
+                                        <option value="other">🏢 г. {{i.city}}, ул. {{i.street}}, {{i.house}} - кв. {{i.apartment}}</option>
+                                    {% else %}
+                                        <option value="other">🏢 г. {{i.city}}, ул. {{i.street}}, {{i.house}}</option>
+                                    {% endif %}
+
+                                {% endif %}
+                                {% endfor %}
+                                {% endif %}
+                            </select>
+
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="showNewAddress()">
+                                ➕ Добавить новый адрес
+                            </button>
+
+                            <!-- Форма нового адреса (скрыта) -->
+                            <div id="newAddressForm" style="display: none; margin-top: 10px;">
+
+                                <select class="form-select mb-2" id="newAddress_type">
+                                    <option value="home">🏠 Домашний </option>
+                                    <option value="work">💼 Рабочий </option>
+                                    <option value="other">🏢 Другой </option>
+                                </select>
+
+                                <input type="text" class="form-control mb-2" id="city_id" placeholder="Город">
+                                <input type="text" class="form-control mb-2" id="street_id" placeholder="Улица">
+                                <input type="text" class="form-control mb-2" id="house_id" placeholder="Дом">
+                                <input type="text" class="form-control mb-2" id="apartment_id" placeholder="Квартира/офис">
+                                <div class="d-flex gap-2">
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="saveNewAddress()">Сохранить</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="hideNewAddress()">Отмена</button>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-check mb-3">
                             <input class="form-check-input" type="radio" name="delivery" id="delivery2" onchange="data_cart('delivery')" checked>
                             <label class="form-check-label" for="delivery2">
-                                Самовывоз (20-30 мин)
+                               🏪 Самовывоз (20-30 мин)
                             </label>
+                        </div>
+<!--                        Выбор адресов для самовывоза-->
+                        <div id="pickupBlock">
+                            <h5 class="mb-3">📍 Пункты самовывоза</h5>
+                            <select class="form-select">
+                                <option value="center">📍 г. Владивосток Центральный: ул. Ленина, 15</option>
+                                <option value="north">📍 г. Уссурийск Северный: пр. Победы, 42</option>
+                                <option value="south">📍 г. Хабаровск Южный: ул. Гагарина, 8</option>
+                            </select>
                         </div>
 
                         <!-- Выбор времени -->
@@ -400,19 +518,19 @@
                         <div class="form-check mb-2">
                             <input class="form-check-input" type="radio" name="payment" id="payment1" checked>
                             <label class="form-check-label" for="payment1">
-                                Картой онлайн
+                               💳 Картой онлайн
                             </label>
                         </div>
                         <div class="form-check mb-2">
                             <input class="form-check-input" type="radio" name="payment" id="payment2">
                             <label class="form-check-label" for="payment2">
-                                Картой курьеру
+                               👤 Картой курьеру
                             </label>
                         </div>
                         <div class="form-check mb-3">
                             <input class="form-check-input" type="radio" name="payment" id="payment3">
                             <label class="form-check-label" for="payment3">
-                                Наличными курьеру
+                               💵 Наличными курьеру
                             </label>
                         </div>
 
@@ -787,6 +905,10 @@
         // action для скидки и доставки
         function data_cart(action) {
 
+            if (action == 'delivery') {
+                toggleDelivery();
+            }
+
             // промокод
             const promo_btn = document.getElementById(`promo-btn`);
             const promoCodeInput = document.getElementById(`promoCodeText`);
@@ -867,6 +989,94 @@
             })
 
         }
+
+<!--        Блок функциий для появления окон выбора при доставки-->
+        function toggleDelivery() {
+            const courier = document.getElementById('delivery1').checked;
+            document.getElementById('courierBlock').style.display = courier ? 'block' : 'none';
+            document.getElementById('pickupBlock').style.display = courier ? 'none' : 'block';
+        }
+
+        function showNewAddress() {
+            document.getElementById('newAddressForm').style.display = 'block';
+        }
+
+        function hideNewAddress() {
+            document.getElementById('newAddressForm').style.display = 'none';
+
+            document.getElementById('city_id').value = '';
+            document.getElementById('street_id').value = '';
+            document.getElementById('house_id').value = '';
+            document.getElementById('apartment_id').value = '';
+
+        }
+
+        function saveNewAddress() {
+
+            const city = document.getElementById('city_id').value.trim();
+            const street = document.getElementById('street_id').value.trim();
+            const house = document.getElementById('house_id').value.trim();
+            const apartment = document.getElementById('apartment_id').value.trim();
+
+            const address_type = document.getElementById('newAddress_type').value;
+
+            if (!city) return alert('Введите город');
+            if (!street) return alert('Введите улицу');
+            if (!house) return alert('Введите дом');
+
+            const url = `basket/add_new_adress`;
+
+            fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                city: city,
+                address_type: address_type,
+                street: street,
+                house: house,
+                apartment: apartment
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const select = document.getElementById('addressSelect');
+                const option = document.createElement('option');
+                option.value = 'new_' + Date.now();
+
+
+                new_address_text = 'г. ' + data.city + ' ул. ' + data.street + ', ' + data.house;
+
+                if ( data.apartment != '') {
+                    new_address_text  += ' - кв. ' + data.apartment;
+                }
+
+                if (address_type == 'home') {
+                     option.text = '🏠 ' + new_address_text;
+                }
+                else if (address_type == 'work') {
+                    option.text = '💼 ' + new_address_text;
+                }
+                else {
+                    option.text = '🏢 ' + new_address_text;
+                }
+
+                option.selected = true;
+                select.appendChild(option);
+
+                hideNewAddress();
+            }
+
+            else {
+                console.log(data.message)
+                return alert('Произошла ошибка');
+            }
+        })
+        }
+
 
     </script>
 

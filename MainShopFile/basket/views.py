@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from authorization.models import Users
+from authorization.models import Users, User_adresses
 from menu.models import Dishes
 from .models import Cart
 from .models import PromoCode, PromoCodeUsage
@@ -17,20 +17,30 @@ import json
 def index(request):
     user_id = request.session.get('user_id')
     if user_id:
+        # adress = User_adresses()
+        # adress.user = Users.objects.get(id=user_id)
+        # adress.address_type = 'work'
+        # adress.city = 'Владивосток'
+        # adress.street = 'Леонова'
+        # adress.house = '90'
+        # adress.apartment = '42'
+        # adress.save()
 
-        user = Users.objects.get(id=user_id)
 
         cart = Cart.objects.filter(user_id=user_id).all()
+        adresses = User_adresses.objects.filter(user = user_id).all()
+        if adresses.count() == 0:
+            adresses = 0
+        else:
+            print(adresses)
+            for i in adresses:
+                print(i.city)
         if cart.count() >=1:
             print(user_id)
-            #
-            # total_summa = 0
-            # for i in cart:
-            #     total_summa+= i.total_sum
-            #     print(total_summa)
+
             total_summa = calculate_cart_total(user_id)
 
-            return render(request, 'basket.html', {'cart': cart, 'total_summa' : total_summa })
+            return render(request, 'basket.html', {'cart': cart, 'total_summa' : total_summa, 'adresses': adresses})
         else:
             return redirect('/menu')
     # не забыть проверить
@@ -364,4 +374,53 @@ def calculate_discount(user_id, discound_value):
     discount_sum = (total / 100) * discound_value
     new_total = (total - discount_sum)
     return new_total, discount_sum
+
+
+@require_POST
+def add_new_adress(request):
+    try:
+        data = json.loads(request.body)
+        city = data.get('city', '').strip().capitalize()
+        street = data.get('street', '').strip().capitalize()
+        house = data.get('house', '').strip().upper()
+        apartment = data.get('apartment', '').strip()
+        address_type = data.get('address_type', '').strip()
+
+        user_id = request.session.get('user_id')
+
+        new_adress = User_adresses()
+
+        new_adress.user = Users.objects.get(id=user_id)
+        new_adress.address_type = address_type
+        new_adress.city = city
+        new_adress.street = street
+        new_adress.house = house
+        if apartment != '':
+            new_adress.apartment = apartment
+        new_adress.save()
+
+        return JsonResponse({
+            'success': True,
+            'city' : city,
+            'street' : street,
+            'house' : house,
+            'apartment' : apartment
+        })
+
+    except Exception as Error:
+        return JsonResponse({
+            'success': False,
+            'message': f'{Error}'
+        })
+
+
+
+
+
+
+
+
+
+
+
 

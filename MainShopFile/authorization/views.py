@@ -126,3 +126,10 @@ def profile_view(request):
         # Пользователь удален - очищаем сессию
         del request.session['user_id']
         return redirect('login')
+
+def logout_view(request):
+    print(123123333333333333333444444444444312312333)
+    if 'user_id' in request.session:
+        del request.session['user_id']
+    request.session.flush()
+    return redirect('/')

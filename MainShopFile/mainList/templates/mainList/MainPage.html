@@ -66,9 +66,22 @@
                 <a href="/basket">
                     <button class="btn btn-outline-light me-2">Корзина</button>
                 </a>
-                <a href="/profile">
-                    <button class="btn btn-primary">Профиль</button>
-                </a>
+                <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person"></i> Профиль
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="/profile"><i class="bi bi-person"></i> Мой профиль</a></li>
+                            <li><a class="dropdown-item" href="/profile/orders"><i class="bi bi-box"></i> Мои заказы</a></li>
+                            <li><a class="dropdown-item" href="/profile/addresses"><i class="bi bi-geo-alt"></i> Адреса доставки</a></li>
+                            <li><a class="dropdown-item" href="/profile/settings"><i class="bi bi-gear"></i> Настройки</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="authorization/logout"><i class="bi bi-box-arrow-right"></i> Выйти</a></li>
+                        </ul>
+                    </div>
+<!--                <a href="/profile">-->
+<!--                    <button class="btn btn-primary">Профиль</button>-->
+<!--                </a>-->
 
             </div>
           {% endif %}

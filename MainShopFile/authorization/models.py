@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
 
+
 class Users(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(
@@ -15,11 +16,9 @@ class Users(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def set_password(self, raw_password):
-
         self.password = make_password(raw_password)
 
     def check_password(self, raw_password):
-
         return check_password(raw_password, self.password)
 
     @property
@@ -30,3 +29,47 @@ class Users(models.Model):
         return self.name
 
 
+class User_adresses(models.Model):
+    user = models.ForeignKey(
+        'Users',
+        on_delete=models.CASCADE,
+        related_name='addresses',
+        verbose_name="Пользователь"
+    )
+    ADDRESS_TYPES = [
+        ('home', 'Домашний'),
+        ('work', 'Рабочий'),
+        ('other', 'Другой'),
+    ]
+    address_type = models.CharField(
+        max_length=20,
+        choices=ADDRESS_TYPES,
+        default='home',
+        verbose_name="Тип адреса"
+    )
+
+    is_default = models.BooleanField(
+        default=False,
+        verbose_name="Основной адрес"
+    )
+    city = models.CharField(
+        max_length=100,
+        verbose_name="Город"
+    )
+
+    street = models.CharField(
+        max_length=200,
+        verbose_name="Улица"
+    )
+
+    house = models.CharField(
+        max_length=20,
+        verbose_name="Дом"
+    )
+
+    apartment = models.CharField(
+        max_length=20,
+        blank=True,
+        verbose_name="Квартира/офис"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
