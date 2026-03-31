@@ -186,6 +186,166 @@
             font-size: 12px;
             margin-left: 10px;
         }
+        .text-muted.empty {
+            color: rgba(0, 0, 0, 0.4);
+            font-style: italic;
+        }
+
+            /* Модальное окно адрессов */
+        .address-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .address-modal.active {
+            display: flex;
+        }
+
+        .address-modal .modal-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #333;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ff6b35;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .checkbox-label input {
+            width: auto;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: #e55a2b;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        textarea {
+            resize: vertical;
+            font-family: inherit;
+        }
     </style>
 </head>
 <body>
@@ -366,29 +526,49 @@
                             <table class="table table-borderless">
                                 <tr>
                                     <td class="info-label">Имя:</td>
-                                    <td class="info-value">Анна Петрова</td>
+                                    <td class="info-value" id="user_name">{{user.name}}</td>
                                 </tr>
                                 <tr>
                                     <td class="info-label">Email:</td>
-                                    <td class="info-value">anna@example.com</td>
+                                    <td class="info-value" id="user_email">{{user.email}}</td>
                                 </tr>
                                 <tr>
                                     <td class="info-label">Телефон:</td>
-                                    <td class="info-value">+7 (999) 123-45-67</td>
+                                        <td class="info-value" id="user_phone">
+                                            {% if profile.phone %}
+                                                {{profile.phone}}
+                                            {% else %}
+                                                Номер не указан
+                                            {% endif %}
+                                        </td>
                                 </tr>
                                 <tr>
                                     <td class="info-label">Дата рождения:</td>
-                                    <td class="info-value">15.05.1995</td>
+                                    <td class="info-value" id="user_birth_date">
+                                        {% if profile.birth_date %}
+                                            {{profile.birth_date|date:"d.m.Y"  }}
+                                        {% else %}
+                                            Дата не указана
+                                        {% endif %}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="info-label">На сайте с:</td>
                                     <td class="info-value">{{user.created_at}}</td>
                                 </tr>
+
                             </table>
                         </div>
                         <div class="col-md-6">
                             <h5 class="mb-3">О себе</h5>
-                            <p class="text-muted">Люблю вкусную еду, особенно пиццу и суши. Часто заказываю через BitFood, всегда свежее и вкусное!</p>
+                            <p class="text-muted" id="user_about"
+                                class="{% if not profile.about %}empty{% endif %}">
+                                {% if profile.about %}
+                                    {{ profile.about }}
+                                {% else %}
+                                    Нет описания
+                                {% endif %}
+                            </p>
 
                             <h5 class="mb-3 mt-4">Предпочтения</h5>
                             <div class="d-flex flex-wrap gap-2">
@@ -495,7 +675,7 @@
                 <div class="tab-pane fade" id="addresses" role="tabpanel">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="mb-0">Мои адреса доставки</h5>
-                        <button class="btn btn-primary btn-sm">
+                        <button class="btn btn-primary btn-sm" onclick="openAddressModal()">
                             <i class="bi bi-plus"></i> Добавить адрес
                         </button>
                     </div>
@@ -519,10 +699,18 @@
                         <p class="text-muted small mb-0">Подъезд 2, домофон 25, этаж 5</p>
                     </div>
 
+                    {% for i in addresses%}
                     <div class="address-card">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <span class="fw-bold">Работа</span>
+                                {% if i.address_type == 'home' %}
+                                    <span class="fw-bold">Дом</span>
+                                {% elif i.address_type == 'work' %}
+                                    <span class="fw-bold">Работа</span>
+                                {% else %}
+                                    <span class="fw-bold">Другое</span>
+                                {% endif %}
+
                             </div>
                             <div>
                                 <button class="btn btn-link text-primary p-0 me-2">
@@ -533,9 +721,11 @@
                                 </button>
                             </div>
                         </div>
-                        <p class="mt-2 mb-1">ул. Ленина, д. 50, офис 300</p>
-                        <p class="text-muted small mb-0">Бизнес-центр "Горизонт", вход с центрального входа</p>
+                        <p class="mt-2 mb-1">г. {{i.city}} ул. {{i.street}}, д. {{i.house}}{% if i.apartment %}, офис/кв. {{i.apartment}} {% endif %}</p>
+<!--                        <p class="text-muted small mb-0">Бизнес-центр "Горизонт", вход с центрального входа</p>-->
+                            <p class="text-muted small mb-0">{% if i.comment %}{{i.comment}}{% else %}-----{% endif %}</p>
                     </div>
+                    {% endfor %}
                 </div>
 
                 <!-- Вкладка Избранное -->
@@ -661,30 +851,111 @@
                     <form>
                         <div class="mb-3">
                             <label class="form-label">Имя</label>
-                            <input type="text" class="edit-input" value="Анна Петрова">
+                            <input type="text" class="edit-input" id="user_new_name" value="{{user.name}}">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Email</label>
-                            <input type="email" class="edit-input" value="anna@example.com">
+                            <input type="email" class="edit-input" id="user_new_email" value="{{user.email}}">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Телефон</label>
-                            <input type="tel" class="edit-input" value="+7 (999) 123-45-67">
+                            <input type="tel" id="user_new_phone" class="edit-input" value="{% if profile.phone%}{{profile.phone}}{% endif %}"
+                            placeholder="{% if not profile.phone %}Введите номер телефона (89996667788){% endif %}">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Дата рождения</label>
-                            <input type="date" class="edit-input" value="1995-05-15">
+<!--                            value="1995-08-18"-->
+                            <input type="date" id="user_new_birth_date" class="edit-input" value="{% if profile.birth_date%}{{profile.birth_date|date:'Y-m-d' }}{% endif %}">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">О себе</label>
-                            <textarea class="edit-input" rows="3">Люблю вкусную еду, особенно пиццу и суши.</textarea>
+                            <textarea class="edit-input" id="user_new_about" rows="3" placeholder="Напишите что-нибудь о BitFood">{% if profile.about%}{{profile.about}}{% endif %}</textarea>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Сохранить</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="profileEdit()">Сохранить</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+
+        <!-- Модальное окно для добавления/редактирования адреса -->
+    <div id="addressModal" class="address-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Добавить адрес</h3>
+                <button class="modal-close" onclick="closeAddressModal()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <form id="addressForm">
+                    <div class="form-group">
+                        <label>Тип адреса *</label>
+                        <select id="address-type" required>
+                            <option value="home">🏠 Домашний</option>
+                            <option value="work">💼 Рабочий</option>
+                            <option value="other">🏢 Другой</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Город *</label>
+                            <input type="text" id="address-city" placeholder="г. Москва" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Улица *</label>
+                            <input type="text" id="address-street" placeholder="ул. Пушкина" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Дом *</label>
+                            <input type="text" id="address-house" placeholder="10" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Квартира/офис</label>
+                            <input type="text" id="address-apartment" placeholder="25 (необязательно)">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Подъезд</label>
+                            <input type="text" id="address-entrance" placeholder="2">
+                        </div>
+                        <div class="form-group">
+                            <label>Этаж</label>
+                            <input type="text" id="address-floor" placeholder="5">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Домофон</label>
+                        <input type="text" id="address-intercom" placeholder="25">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Комментарий</label>
+                        <textarea id="address-comment" rows="2" placeholder="Ориентиры, особые приметы..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="address-default">
+                            <span>Сделать основным адресом</span>
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeAddressModal()">Отмена</button>
+                <button class="btn-primary" onclick="saveAddress()">Сохранить</button>
             </div>
         </div>
     </div>
@@ -714,11 +985,242 @@
             </div>
             <hr class="my-4">
             <div class="text-center">
-                <p>&copy; 2024 BitFood. Все права защищены.</p>
+                <p>&copy; 2026 BitFood. Все права защищены.</p>
             </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function profileEdit() {
+            console.log('123333333333332323323');
+
+            const new_name = document.getElementById('user_new_name');
+            const new_name_text = new_name.value;
+            const new_email = document.getElementById('user_new_email').value;
+            const new_phone = document.getElementById('user_new_phone').value;
+            new_birth_date = document.getElementById('user_new_birth_date').value;
+            const new_about = document.getElementById('user_new_about').value;
+            console.log('45125555555555555123333333333332323323');
+            console.log(new_birth_date);
+            console.log(new_name_text);
+
+            const url = `profile/profile_edit`;
+
+            fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: new_name_text,
+                email: new_email,
+                phone: new_phone,
+                birth_date: new_birth_date,
+                about: new_about
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+
+                const update_name = document.getElementById('user_name');
+                const update_email = document.getElementById('user_email');
+                const update_phone = document.getElementById('user_phone');
+                const update_about = document.getElementById('user_about');
+                const update_birth_date = document.getElementById('user_birth_date');
+
+
+                update_name.textContent = new_name_text;
+                update_email.textContent = new_email;
+                update_phone.textContent = new_phone;
+                update_about.textContent = new_about;
+                update_birth_date.textContent = formatDateForDisplay(new_birth_date);
+
+<!--                new_birth_date = new_birth_date;-->
+                return alert(data.error);
+
+
+            }
+            else {
+                return alert(data.error);
+            }
+        })
+
+        }
+
+        function formatDateForDisplay(dateStr) {
+            // dateStr = "2024-03-31"
+            const [year, month, day] = dateStr.split('-');
+            return `${day}.${month}.${year}`;  // "31.03.2024"
+        }
+
+        function openAddressModal() {
+            document.getElementById('addressModal').classList.add('active');
+        }
+
+        function closeAddressModal() {
+            document.getElementById('addressModal').classList.remove('active');
+        }
+
+        function saveAddress() {
+            const address_type = document.getElementById('address-type').value;
+
+            // required
+            const address_city = document.getElementById('address-city').value;
+            const address_street = document.getElementById('address-street').value;
+            const address_house = document.getElementById('address-house').value;
+
+            const address_apartment = document.getElementById('address-apartment').value;
+            const address_entrance = document.getElementById('address-entrance').value;
+            const address_floor = document.getElementById('address-floor').value;
+            const address_intercom = document.getElementById('address-intercom').value;
+            const address_comment = document.getElementById('address-comment').value;
+
+            const address_default = document.getElementById('address-default');
+            const isAddress_default = address_default.checked;
+
+             if (!address_city || !address_street || !address_house) {
+                alert('Заполните город, улицу и дом');
+                return;
+            }
+
+            else {
+
+                 const url = `profile/address_add`;
+
+                fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    address_type: address_type,
+                    city: address_city,
+                    street: address_street,
+                    house: address_house,
+                    apartment: address_apartment,
+                    entrance: address_entrance,
+                    floor: address_floor,
+                    intercom: address_intercom,
+                    comment: address_comment,
+                    address_default: isAddress_default,
+                })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+
+                        const address_data = {
+                            'address_type': address_type,
+                            'city': address_city,
+                            'street': address_street,
+                            'house': address_house,
+                            'apartment': address_apartment,
+                            'entrance': address_entrance,
+                            'floor': address_floor,
+                            'intercom': address_intercom,
+                            'comment': address_comment,
+                            'address_default': isAddress_default
+                        };
+                        addAddressToPage(address_data);
+
+                        closeAddressModal();
+                        document.getElementById('addressForm').reset();
+                        showNotification('Адрес добавлен!');
+
+                    }
+                    else {
+                        return alert(data.error);
+                    }
+                })
+            }
+
+        }
+
+        function addAddressToPage(address){
+            const container = document.getElementById('addresses');
+            if (!container) return;
+
+            const emptyMessage = container.querySelector('.empty-addresses');
+            if (emptyMessage) {
+                container.innerHTML = '';
+            }
+<!--             ${address.city}-->
+            console.log(address.address_type)
+            const addressHtml = `
+                <div class="address-card">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <span class="fw-bold">${address_types(address.address_type)}</span>
+                                </div>
+                                <div>
+                                    <button class="btn btn-link text-primary p-0 me-2">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-link text-danger p-0">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="mt-2 mb-1">г. ${address.city} ул. ${address.street}, д. ${address.house}${address_apartment(address.apartment)}</p>
+                                <p class="text-muted small mb-0">${address_comment(address.comment)}</p>
+                        </div>
+        `;
+        container.insertAdjacentHTML('beforeend', addressHtml);
+
+        }
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: #4CAF50;
+                color: white;
+                padding: 12px 24px;
+                border-radius: 8px;
+                z-index: 2000;
+                animation: fadeOut 3s forwards;
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+        function address_types(type) {
+            if (type == 'home') {
+                return 'Дом';
+            }
+            else if (type == 'work') {
+                return 'Работа';
+            }
+            else {
+                return 'Другое';
+            }
+        }
+        function address_apartment(apartment) {
+            if (apartment != '') {
+                return ', офис/кв. ' + apartment;
+            }
+            else {
+                return '';
+            }
+        }
+        function address_comment(comment) {
+            if (comment != '') {
+                return comment;
+            }
+            else {
+                return '-----';
+            }
+        }
+    </script>
 </body>
+
+
+
+
+
 </html>

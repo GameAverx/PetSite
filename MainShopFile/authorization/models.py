@@ -2,6 +2,10 @@ from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
 
 
+
+def user_avatar_path(instance, filename):
+    return f'avatars/user_{instance.id}/{filename}'
+
 class Users(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(
@@ -13,6 +17,15 @@ class Users(models.Model):
         help_text="Введите действующий email"
     )
     password = models.CharField(max_length=128)
+
+    # avatar = models.ImageField(
+    #     upload_to=user_avatar_path,
+    #     default='avatars/default_avatar.jpg',
+    #     blank=True,
+    #     null=True,
+    #     verbose_name="Аватар"
+    # )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def set_password(self, raw_password):
@@ -71,5 +84,26 @@ class User_adresses(models.Model):
         max_length=20,
         blank=True,
         verbose_name="Квартира/офис"
+    )
+    # подъезд
+    entrance = models.CharField(
+        max_length=20,
+        blank=True,
+        verbose_name="Подъезд"
+    )
+    floor = models.CharField(
+        max_length=20,
+        blank=True,
+        verbose_name="Этаж"
+    )
+    intercom = models.CharField(
+        max_length=20,
+        blank=True,
+        verbose_name="Домофон"
+    )
+    comment = models.CharField(
+        max_length=150,
+        blank=True,
+        verbose_name="Комментарий"
     )
     created_at = models.DateTimeField(auto_now_add=True)
