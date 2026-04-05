@@ -28,6 +28,10 @@ class Users(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = "User"  # Единственное число
+        verbose_name_plural = "Users"  # Множественное число
+
     def set_password(self, raw_password):
         self.password = make_password(raw_password)
 

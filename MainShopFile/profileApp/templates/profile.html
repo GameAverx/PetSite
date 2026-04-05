@@ -496,7 +496,7 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="orders-tab" data-bs-toggle="pill" data-bs-target="#orders" type="button">
-                        <i class="bi bi-box"></i> Заказы
+                        <i class="bi bi-box"></i> Заказы *в разработке*
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -506,12 +506,12 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="favorites-tab" data-bs-toggle="pill" data-bs-target="#favorites" type="button">
-                        <i class="bi bi-heart"></i> Избранное
+                        <i class="bi bi-heart"></i> Избранное *в разработке*
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="settings-tab" data-bs-toggle="pill" data-bs-target="#settings" type="button">
-                        <i class="bi bi-gear"></i> Настройки
+                        <i class="bi bi-gear"></i> Настройки *в разработке*
                     </button>
                 </li>
             </ul>
@@ -679,51 +679,48 @@
                             <i class="bi bi-plus"></i> Добавить адрес
                         </button>
                     </div>
-
-                    <div class="address-card default">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <span class="fw-bold">Дом</span>
-                                <span class="default-badge">По умолчанию</span>
-                            </div>
-                            <div>
-                                <button class="btn btn-link text-primary p-0 me-2">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button class="btn btn-link text-danger p-0">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <p class="mt-2 mb-1">ул. Пушкина, д. 10, кв. 25</p>
-                        <p class="text-muted small mb-0">Подъезд 2, домофон 25, этаж 5</p>
-                    </div>
+<!--                        адрес по умолчанию-->
+<!--                        адрес по умолчанию-->
+<!--                        адрес по умолчанию-->
+<!--                        адрес по умолчанию-->
+<!--                    <div class="address-card default">-->
+<!--                        <div class="d-flex justify-content-between">-->
+<!--                            <div>-->
+<!--                                <span class="fw-bold">Дом</span>-->
+<!--                                <span class="default-badge">По умолчанию</span>-->
+<!--                            </div>-->
+<!--                            <div>-->
+<!--                                <button class="btn btn-link text-primary p-0 me-2">-->
+<!--                                    <i class="bi bi-pencil"></i>-->
+<!--                                </button>-->
+<!--                                <button class="btn btn-link text-danger p-0">-->
+<!--                                    <i class="bi bi-trash"></i>-->
+<!--                                </button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <p class="mt-2 mb-1">ул. Пушкина, д. 10, кв. 25</p>-->
+<!--                        <p class="text-muted small mb-0">Подъезд 2, домофон 25, этаж 5</p>-->
+<!--                    </div>-->
 
                     {% for i in addresses%}
-                    <div class="address-card">
+                    <div class="address-card" id="address_{{i.id}}">
                         <div class="d-flex justify-content-between">
                             <div>
-                                {% if i.address_type == 'home' %}
-                                    <span class="fw-bold">Дом</span>
-                                {% elif i.address_type == 'work' %}
-                                    <span class="fw-bold">Работа</span>
-                                {% else %}
-                                    <span class="fw-bold">Другое</span>
-                                {% endif %}
-
+                                <span class="fw-bold" id="address_type_{{i.id}}">{% if i.address_type == 'home' %}Дом{% elif i.address_type == 'work' %}Работа{% else %}Другое{% endif %}
+                                </span>
                             </div>
                             <div>
                                 <button class="btn btn-link text-primary p-0 me-2">
-                                    <i class="bi bi-pencil"></i>
+                                    <i class="bi bi-pencil" onclick="address_del_edit({{i.id}}, 'edit')"></i>
                                 </button>
                                 <button class="btn btn-link text-danger p-0">
-                                    <i class="bi bi-trash"></i>
+                                    <i class="bi bi-trash" onclick="address_del_edit({{i.id}}, 'delete')"></i>
                                 </button>
                             </div>
                         </div>
-                        <p class="mt-2 mb-1">г. {{i.city}} ул. {{i.street}}, д. {{i.house}}{% if i.apartment %}, офис/кв. {{i.apartment}} {% endif %}</p>
+                        <p class="mt-2 mb-1" id="address_info_{{i.id}}">г. {{i.city}} ул. {{i.street}}, д. {{i.house}}{% if i.apartment %}, офис/кв. {{i.apartment}} {% endif %}</p>
 <!--                        <p class="text-muted small mb-0">Бизнес-центр "Горизонт", вход с центрального входа</p>-->
-                            <p class="text-muted small mb-0">{% if i.comment %}{{i.comment}}{% else %}-----{% endif %}</p>
+                            <p class="text-muted small mb-0" id="address_comment_{{i.id}}">{% if i.comment %}{{i.comment}}{% else %}-----{% endif %}</p>
                     </div>
                     {% endfor %}
                 </div>
@@ -993,7 +990,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function profileEdit() {
-            console.log('123333333333332323323');
 
             const new_name = document.getElementById('user_new_name');
             const new_name_text = new_name.value;
@@ -1001,9 +997,6 @@
             const new_phone = document.getElementById('user_new_phone').value;
             new_birth_date = document.getElementById('user_new_birth_date').value;
             const new_about = document.getElementById('user_new_about').value;
-            console.log('45125555555555555123333333333332323323');
-            console.log(new_birth_date);
-            console.log(new_name_text);
 
             const url = `profile/profile_edit`;
 
@@ -1038,7 +1031,6 @@
                 update_about.textContent = new_about;
                 update_birth_date.textContent = formatDateForDisplay(new_birth_date);
 
-<!--                new_birth_date = new_birth_date;-->
                 return alert(data.error);
 
 
@@ -1056,9 +1048,28 @@
             return `${day}.${month}.${year}`;  // "31.03.2024"
         }
 
-        function openAddressModal() {
+        // для определения добавления или редактирования
+        let editingAddressId = null;
+
+        function openAddressModal(addressId = null) {
+
+            if (addressId) {
+                // Режим редактирования
+                editingAddressId = addressId;
+                document.getElementById('modal-title').textContent = 'Редактировать адрес';
+
+
+            } else {
+                // Режим добавления
+                // Очищаем форму
+                document.getElementById('addressForm').reset();
+                editingAddressId = null;
+                document.getElementById('modal-title').textContent = 'Добавить адрес';
+            }
+
             document.getElementById('addressModal').classList.add('active');
         }
+
 
         function closeAddressModal() {
             document.getElementById('addressModal').classList.remove('active');
@@ -1072,7 +1083,7 @@
             const address_street = document.getElementById('address-street').value;
             const address_house = document.getElementById('address-house').value;
 
-            const address_apartment = document.getElementById('address-apartment').value;
+            const apartment = document.getElementById('address-apartment').value;
             const address_entrance = document.getElementById('address-entrance').value;
             const address_floor = document.getElementById('address-floor').value;
             const address_intercom = document.getElementById('address-intercom').value;
@@ -1086,9 +1097,50 @@
                 return;
             }
 
-            else {
+            if (editingAddressId) {
+                const url = `profile/address_update`;
+                fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    address_id: editingAddressId,
+                    address_type: address_type,
+                    city: address_city,
+                    street: address_street,
+                    house: address_house,
+                    apartment: apartment,
+                    entrance: address_entrance,
+                    floor: address_floor,
+                    intercom: address_intercom,
+                    comment: address_comment,
+                    address_default: isAddress_default,
+                })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const address_info_update = document.getElementById('address_info_' + editingAddressId);
+                        const address_type_update = document.getElementById('address_type_' + editingAddressId);
+                        const address_comment_update = document.getElementById('address_comment_' + editingAddressId);
 
-                 const url = `profile/address_add`;
+                        address_type_update.textContent  =  address_types(data.address_type);
+                        address_info_update.textContent  =  'г. ' + data.city + ' ул. ' + data.street + ', д. ' + data.house + address_apartment(data.apartment);
+                        address_comment_update.textContent = data.comment;
+
+                        closeAddressModal();
+                        document.getElementById('addressForm').reset();
+                        showNotification('Адрес обновлён!');
+                    }
+                    else {
+                        return alert(data.error);
+                    }
+                })
+            }
+            else {
+                const url = `profile/address_add`;
 
                 fetch(url, {
                 method: 'POST',
@@ -1101,7 +1153,7 @@
                     city: address_city,
                     street: address_street,
                     house: address_house,
-                    apartment: address_apartment,
+                    apartment: apartment,
                     entrance: address_entrance,
                     floor: address_floor,
                     intercom: address_intercom,
@@ -1118,12 +1170,13 @@
                             'city': address_city,
                             'street': address_street,
                             'house': address_house,
-                            'apartment': address_apartment,
+                            'apartment': apartment,
                             'entrance': address_entrance,
                             'floor': address_floor,
                             'intercom': address_intercom,
                             'comment': address_comment,
-                            'address_default': isAddress_default
+                            'address_default': isAddress_default,
+                            'id': data.id
                         };
                         addAddressToPage(address_data);
 
@@ -1148,25 +1201,23 @@
             if (emptyMessage) {
                 container.innerHTML = '';
             }
-<!--             ${address.city}-->
-            console.log(address.address_type)
             const addressHtml = `
-                <div class="address-card">
+                <div class="address-card" id="address_${address.id}">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <span class="fw-bold">${address_types(address.address_type)}</span>
+                                    <span class="fw-bold" id="address_type_${address.id}">${address_types(address.address_type)}</span>
                                 </div>
                                 <div>
                                     <button class="btn btn-link text-primary p-0 me-2">
-                                        <i class="bi bi-pencil"></i>
+                                        <i class="bi bi-pencil" onclick="address_del_edit(${address.id}, 'edit')"></i>
                                     </button>
                                     <button class="btn btn-link text-danger p-0">
-                                        <i class="bi bi-trash"></i>
+                                        <i class="bi bi-trash" onclick="address_del_edit(${address.id}, 'delete')"></i>
                                     </button>
                                 </div>
                             </div>
-                            <p class="mt-2 mb-1">г. ${address.city} ул. ${address.street}, д. ${address.house}${address_apartment(address.apartment)}</p>
-                                <p class="text-muted small mb-0">${address_comment(address.comment)}</p>
+                            <p class="mt-2 mb-1" id="address_info_${address.id}">г. ${address.city} ул. ${address.street}, д. ${address.house}${address_apartment(address.apartment)}</p>
+                                <p class="text-muted small mb-0" id="address_comment_${address.id}">${address_comment(address.comment)}</p>
                         </div>
         `;
         container.insertAdjacentHTML('beforeend', addressHtml);
@@ -1216,6 +1267,73 @@
                 return '-----';
             }
         }
+
+        function address_del_edit(address_id, action) {
+            const url = `profile/address_edit`;
+
+            fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                address_id: address_id,
+                action: action,
+            })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (action == 'delete') {
+                        const addressCard = document.getElementById('address_' + address_id);
+                        if (addressCard) {
+                            addressCard.remove();  // удаляет элемент и всё внутри
+                        }
+                    }
+                    else if (action == 'edit') {
+                        document.getElementById('addressForm').reset();
+
+                        const address_type = document.getElementById('address-type');
+                        address_type.value = data.address_type;
+                        // required
+                        const address_city = document.getElementById('address-city');
+                        address_city.value = data.city;
+
+                        const address_street = document.getElementById('address-street');
+                        address_street.value = data.street;
+
+                        const address_house = document.getElementById('address-house');
+                        address_house.value = data.house;
+
+                        // not required
+                        const address_apartment = document.getElementById('address-apartment');
+                        address_apartment.value = data.apartment;
+
+                        const address_entrance = document.getElementById('address-entrance');
+                        address_entrance.value = data.entrance;
+
+                        const address_floor = document.getElementById('address-floor');
+                        address_floor.value = data.floor;
+
+                        const address_intercom = document.getElementById('address-intercom');
+                        address_intercom.value = data.intercom;
+
+                        const address_comment = document.getElementById('address-comment');
+                        address_comment.value = data.comment;
+
+                        const address_default = document.getElementById('address-default');
+                        if (data.is_default) {
+                        address_default.checked = true;
+                        } else {
+                           address_default.checked = false;
+                        }
+                        openAddressModal(address_id);
+                    }
+                }
+            })
+        }
+
     </script>
 </body>
 

@@ -1,40 +1,38 @@
 from django.contrib import admin
-# from .models import Dishes
+from .models import Dishes
 
 
+@admin.register(Dishes)
+class DishesAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'price', 'category', 'is_available', 'created_at')
 
-# class DishesAdmin(admin.ModelAdmin):
-#     # Поля, отображаемые в списке
-#     list_display = ('id', 'name', 'price', 'category', 'is_available', 'created_at')
-#
-#     # Поля, по которым можно кликнуть для редактирования
-#     list_display_links = ('id', 'name')
-#
-#     # Поля, которые можно редактировать прямо в списке
-#     list_editable = ('price', 'is_available')
-#
-#     # Фильтры справа
-#     list_filter = ('category', 'is_available', 'created_at')
-#
-#     # Поиск по полям
-#     search_fields = ('name', 'description', 'category')
-#
-#     # Количество записей на странице
-#     list_per_page = 20
-#
-#     # Поля для редактирования (разбивка на секции)
-#     fieldsets = (
-#         ('Основная информация', {
-#             'fields': ('name', 'price', 'category')
-#         }),
-#         ('Детали', {
-#             'fields': ('description', 'is_available')
-#         }),
-#         ('Даты', {
-#             'fields': ('created_at',),
-#             'classes': ('collapse',)  # свернутая секция
-#         }),
-#     )
+    list_display_links = ('id', 'name')
+
+    list_editable = ('price', 'is_available')
+
+    list_filter = ('category', 'is_available', 'created_at')
+
+    search_fields = ('name', 'description', 'category')
+
+    list_per_page = 20
+
+    # Поля для редактирования (разбивка на секции)
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('name', 'price', 'category')
+        }),
+        ('Детали', {
+            'fields': ('description', 'is_available')
+        }),
+        ('Изображения', {
+            'fields': ('image_path',),
+            'classes': ('collapse',)
+        }),
+        ('Даты', {
+            'fields': ('created_at',),
+            'classes': ('collapse',)  # свернутая секция
+        }),
+    )
 #
 #     # Только для чтения поля
 #     readonly_fields = ('created_at',)

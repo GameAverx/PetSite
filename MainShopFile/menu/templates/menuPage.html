@@ -143,7 +143,8 @@
                     <p>С BitFood вы можете заказать любимые блюда из более чем 100 ресторанов с доставкой до двери.</p>
                 </div>
                 <div class="col-lg-6">
-                    <img src="https://source.unsplash.com/random/600x400/?restaurant" class="img-fluid rounded" alt="Ресторан">
+                    {% load static %}
+                    <img src="{% static 'images/restaurant.jpg' %}" class="img-fluid rounded" alt="Ресторан">
                 </div>
             </div>
         </div>

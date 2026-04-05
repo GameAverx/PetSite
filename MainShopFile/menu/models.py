@@ -17,6 +17,10 @@ class Dishes(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Dish"  # Единственное число
+        verbose_name_plural = "Dishes"  # Множественное число
+
 
 
 

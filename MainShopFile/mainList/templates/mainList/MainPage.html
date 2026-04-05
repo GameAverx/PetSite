@@ -108,7 +108,8 @@
         <div class="row g-4">
             <div class="col-md-6 col-lg-3">
                 <div class="card h-100">
-                    <img src="https://source.unsplash.com/random/300x200/?pizza" class="card-img-top" alt="Пицца">
+                    {% load static %}
+                    <img src="{% static 'images/pizza.jpg' %}" class="card-img-top" alt="Пицца">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Пицца Маргарита</h5>
                         <p class="card-text">Классическая итальянская пицца с томатным соусом и моцареллой</p>
@@ -123,7 +124,7 @@
             </div>
             <div class="col-md-6 col-lg-3">
                 <div class="card h-100">
-                    <img src="https://source.unsplash.com/random/300x200/?sushi" class="card-img-top" alt="Суши">
+                    <img src="{% static 'images/sushi.jpg' %}" class="card-img-top" alt="Суши">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Роллы Калифорния</h5>
                         <p class="card-text">8 шт. с крабом, авокадо и икрой масаго</p>
@@ -138,7 +139,7 @@
             </div>
             <div class="col-md-6 col-lg-3">
                 <div class="card h-100">
-                    <img src="https://source.unsplash.com/random/300x200/?burger" class="card-img-top" alt="Бургер">
+                    <img src="{% static 'images/Burger.jpg' %}" class="card-img-top" alt="Бургер">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Чизбургер</h5>
                         <p class="card-text">Сочная говяжья котлета с сыром чеддер и овощами</p>
@@ -153,7 +154,7 @@
             </div>
             <div class="col-md-6 col-lg-3">
                 <div class="card h-100">
-                    <img src="https://source.unsplash.com/random/300x200/?salad" class="card-img-top" alt="Салат">
+                    <img src="{% static 'images/Cezar.jpg' %}" class="card-img-top" alt="Салат">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Салат Цезарь</h5>
                         <p class="card-text">С куриным филе, пармезаном и соусом цезарь</p>
@@ -183,7 +184,8 @@
                 <p>С BitFood вы можете заказать любимые блюда из более чем 100 ресторанов с доставкой до двери.</p>
             </div>
             <div class="col-lg-6">
-                <img src="https://source.unsplash.com/random/600x400/?restaurant" class="img-fluid rounded"
+                {% load static %}
+                <img src="{% static 'images/restaurant.jpg' %}" class="img-fluid rounded"
                      alt="Ресторан">
             </div>
         </div>
