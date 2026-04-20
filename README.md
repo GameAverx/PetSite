@@ -1,3 +1,3 @@
 to launch:
 - cd MainShopFile
-- python manage.py runserve
+- python manage.py runserver
